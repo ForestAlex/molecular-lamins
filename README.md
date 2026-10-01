@@ -40,9 +40,16 @@ We use GROMACS 2025.2 with the CHARMM force field.
   - [X] Choose _1: TIP3P_ as water model.
   - Note: We require the flags `-ignh` and `-missing` to build the correct hydrogen topology and protonation for pH = 7 and complete side chains with missing atoms respective for the force field.
   - [X] This run generates a .gro and many .top (topology files). Make a subfolder **H**, **R**, **Q**, **7Z21_R** in the _top_ folder. Copy the topology files respectively to the mutation folder.
-- [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**).
+  - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**).
     - `gmx pdb2gmx -f "data/7Z21-WT-without-waters.pdb" -o "gro/R.gro" -ignh -missing`
     - `gmx pdb2gmx -f "data/7Z21-RH-without-waters.pdb" -o "gro/H.gro" -ignh -missing`
     - `gmx pdb2gmx -f "data/7Z21-RQ-without-waters.pdb" -o "gro/Q.gro" -ignh -missing`
     - `gmx pdb2gmx -f "data/7Z21-AT-without-waters.pdb" -o "gro/7Z21_R.gro" -ignh -missing`
-- [X] 2. 
+  - DOWNLOAD ALL THE .GRO FILES AND CHECK IF THE CORRECT MUTATIONS IN THE CORRECT PLACES ARE THERE. 
+- [X] 2. Put into box: `gmx editconf -f "gro/R.gro" -o "box/R.gro" -c -d 1.2 -bt dodecahedron`
+  - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**). No .top files will be generated here.
+  - Optional: DOWNLOAD ALL THE .GRO FILES AND CHECK.
+- [X] 3. Add waters with the spc216.gro standard water model (incl. in GROMACS): `gmx solvate -cp "box/R.gro" -cs spc216.gro -o "solv/R.gro" -p "top/R/topol.top"`
+  - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**). New .top files will be generated in the respective folders (the old ones marked with hashtags ###.)
+  - Optional: DOWNLOAD ALL THE .GRO FILES AND CHECK.
+- [X] 4. Add ions with a unique _ions.mdp_ file (see attached):
