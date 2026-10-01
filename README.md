@@ -52,4 +52,46 @@ We use GROMACS 2025.2 with the CHARMM force field.
 - [X] 3. Add waters with the spc216.gro standard water model (incl. in GROMACS): `gmx solvate -cp "box/R.gro" -cs spc216.gro -o "solv/R.gro" -p "top/R/topol.top"`
   - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**). New .top files will be generated in the respective folders (the old ones marked with hashtags ###.)
   - Optional: DOWNLOAD ALL THE .GRO FILES AND CHECK.
-- [X] 4. Add ions with a unique _ions.mdp_ file (see attached):
+- [X] 4a. Add the file  _ions.mdp_ file in the `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
+- [X] 4b. Add now small run with this unique _ions.mdp_ file: `gmx grompp -f ions.mdp -c "solv/R.gro" -p "top/R/topol.top" -o "ions/R.tpr" -maxwarn 1`
+  - Docs: R (LD random seed to 927660767), Q (LD random seed to 429910271), H (LD random seed to -109202057), 7Z21_R (LD random seed to -33637261)
+  - Note: The `-maxwarn 2` option verifies that the system is large, and that we will later add charges.
+  - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**). 
+- [X] 5. Add now the ions (we use potassium and chloride as these are most prevalent in the nuclear environment): `gmx genion -s "ions/R.tpr" -o "solv/ions_R.gro" -p "top/R/topol.top" -pname K -nname CL -conc 0.1 -neutral`
+  - Choose _13: SOL_ to replace solvent molecules with ions (otherwise you would replace your protein atoms).
+  - [X] In total, this has to be repeated 4x times (for **ions_H**, **ions_R**, **ions_Q**, **ions_7Z21_R**).
+  - DOWNLOAD ALL THE IONS_X.GRO FILES AND CHECK IF THE CORRECT MUTATIONS IN THE CORRECT PLACES ARE THERE.
+
+### Energy Minimization (EM) equilibration
+
+- [X] Upload the _minim.mdp_ file in the `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.) 
+
+**Repeat this now 3 x WT (parallelize in different consoles)**
+
+- [X] Go to the folder with the respective name, e.g. _R_. (We created it at the beginning, it should be empty.)
+- [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_R.gro" -p "../top/R/topol.top" -o "em_R.tpr" -maxwarn 2`
+- [X] Run `mpirun gmx_mpi mdrun -s "em_R.tpr" -deffnm "em_R" -ntomp 12`
+  - R (-145229826), R2 (-1318948), R3 (1556479603), Q (-270075661), Q2 (519433181), Q3 (-541107489), H (-1006781441), H2 (-704651265), H3 (1952362463), 7Z21_R (1476197244), 7Z21_R2 (-268503105), 7Z21_R3 (-27351105)
+  - `cd 2026_09-Ig-fold-7Z21/R2` ... change to next directory and repeat independent equilibrations.
+  - RENAME IF REPLICA: `gmx grompp -f "../minim.mdp" -c "../solv/ions_R.gro" -p "../top/R/topol.top" -o "em_R`**2**`.tpr" -maxwarn 2`
+- [X] Make another subfolder in the e.g. _R_ and move the files there (to clean up your brain).
+     
+**Repeat this now 3 x Q (parallelize in different consoles)**
+- [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_Q.gro" -p "../top/Q/topol.top" -o "em_Q.tpr" -maxwarn 2`
+- [X] Run `mpirun gmx_mpi mdrun -s "em_Q.tpr" -deffnm "em_Q" -ntomp 12`
+
+**Repeat this now 3 x H (parallelize in different consoles)**
+- [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_H.gro" -p "../top/H/topol.top" -o "em_H.tpr" -maxwarn 2`
+- [X] Run `mpirun gmx_mpi mdrun -s "em_H.tpr" -deffnm "em_H" -ntomp 12`
+
+**Repeat this now 3 x 7Z21_R (parallelize in different consoles)**
+- [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_7Z21_R.gro" -p "../top/7Z21_R/topol.top" -o "em_7Z21_R.tpr" -maxwarn 2`
+- [X] Run `mpirun gmx_mpi mdrun -s "em_7Z21_R.tpr" -deffnm "em_7Z21_R" -ntomp 12`
+
+- [X] FOR ALL: Run `gmx energy -f em_R.edr -o "potential_em.xvg"`
+- [X] FOR ALL: Check convergence with the plotting modality (see Jupyter notebook attached). 
+
+
+### NVT equilibrations
+
+### NPT equilibrations
