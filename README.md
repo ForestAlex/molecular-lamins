@@ -71,27 +71,45 @@ We use GROMACS 2025.2 with the CHARMM force field.
 - [X] Go to the folder with the respective name, e.g. _R_. (We created it at the beginning, it should be empty.)
 - [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_R.gro" -p "../top/R/topol.top" -o "em_R.tpr" -maxwarn 2`
 - [X] Run `mpirun gmx_mpi mdrun -s "em_R.tpr" -deffnm "em_R" -ntomp 12`
-  - R (-145229826), R2 (-1318948), R3 (1556479603), Q (-270075661), Q2 (519433181), Q3 (-541107489), H (-1006781441), H2 (-704651265), H3 (1952362463), 7Z21_R (1476197244), 7Z21_R2 (-268503105), 7Z21_R3 (-27351105)
+  - R (-145229826), R2 (-1318948), R3 (-137634571), Q (-1196073), Q2 (-278663313), Q3 (1470487909), H (-1714243), H2 (-1376784753), H3 (-295772933), 7Z21_R (-1411653833), 7Z21_R2 (-87425033), 7Z21_R3 (-67474433)
   - `cd 2026_09-Ig-fold-7Z21/R2` ... change to next directory and repeat independent equilibrations.
   - RENAME IF REPLICA: `gmx grompp -f "../minim.mdp" -c "../solv/ions_R.gro" -p "../top/R/topol.top" -o "em_R`**2**`.tpr" -maxwarn 2`
+  - 
 - [X] Make another subfolder in the e.g. _R_ and move the files there (to clean up your brain).
      
-**Repeat this now 3 x Q (parallelize in different consoles)**
-- [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_Q.gro" -p "../top/Q/topol.top" -o "em_Q.tpr" -maxwarn 2`
-- [X] Run `mpirun gmx_mpi mdrun -s "em_Q.tpr" -deffnm "em_Q" -ntomp 12`
+**Repeat this for 3 x Q (parallelize in different consoles)**
 
-**Repeat this now 3 x H (parallelize in different consoles)**
-- [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_H.gro" -p "../top/H/topol.top" -o "em_H.tpr" -maxwarn 2`
-- [X] Run `mpirun gmx_mpi mdrun -s "em_H.tpr" -deffnm "em_H" -ntomp 12`
+**Repeat this for 3 x H (parallelize in different consoles)**
 
-**Repeat this now 3 x 7Z21_R (parallelize in different consoles)**
-- [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_7Z21_R.gro" -p "../top/7Z21_R/topol.top" -o "em_7Z21_R.tpr" -maxwarn 2`
-- [X] Run `mpirun gmx_mpi mdrun -s "em_7Z21_R.tpr" -deffnm "em_7Z21_R" -ntomp 12`
+**Repeat this for 3 x 7Z21_R (parallelize in different consoles)**
 
-- [X] FOR ALL: Run `gmx energy -f em_R.edr -o "potential_em.xvg"`
+- [X] FOR ALL: Run `gmx energy -f em_R.edr -o "potential_em_R.xvg"` (choose _11: Potential_)
 - [X] FOR ALL: Check convergence with the plotting modality (see Jupyter notebook attached). 
 
 
-### NVT equilibrations
+### NVT equilibrations (100 ps)
 
-### NPT equilibrations
+- [X] Upload the _nvt.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.) 
+- [X] Prepare run for all replicas: `gmx grompp -f "../nvt.mdp" -c "em/em_R.gro" -r "em/em_R.gro" -p "../top/R/topol.top" -o "nvt_R.tpr"`
+  - R (), R2 (), R3 (), Q (-1345325316), Q2 (1993538489), Q3 (-5252099), H (), H2 (), H3 (), 7Z21_R (-1146667139), 7Z21_R2 (-43160577), 7Z21_R3 (-572575041) 
+- [X] Run all replicas: `mpirun gmx_mpi mdrun -s "nvt_7Z21_R.tpr" -deffnm "nvt_7Z21_R" -ntomp 12`
+- Note: The process is similar to the above.
+- Note: Make another subfolder _nvt_ in the e.g. _R_ and move the respective files there (to clean up your brain).
+
+- [X] FOR ALL: Run `gmx energy -f nvt_R.edr -o "temperature_nvt_R.xvg"` (choose _Temperature_)
+
+### NPT equilibrations (500 ps)
+
+- [X] Upload the _npt.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
+- [X] Prepare run for all replicas: `gmx grompp -f "../npt.mdp" -c "nvt/nvt_R.gro" -r "nvt/nvt_R.gro" -p "../top/9R/topol.top" -o "npt_R.tpr" `
+- [X] Run all replicas: `mpirun gmx_mpi mdrun -s "npt_R.tpr" -deffnm "npt_R" -ntomp 12`
+- Note: The process is similar to the above.
+- Note: Make another subfolder _npt_ in the e.g. _R_ and move the respective files there (to clean up your brain).
+
+- [X] FOR ALL: Run `gmx energy -f npt_R.edr -o "pressure_npt_R.xvg"` (choose _Pressure_)
+- [X] FOR ALL: ONLY IF ENERGY, TEMPERATURE, PRESSURE STABILIZED CONTINUE WITH PRODUCTION RUNS.
+
+
+## PRODUCTION RUN (1-2 µs)
+
+- [X] Upload the _npt.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
