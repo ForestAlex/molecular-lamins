@@ -91,7 +91,7 @@ We use GROMACS 2025.2 with the CHARMM force field.
 
 - [X] Upload the _nvt.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.) 
 - [X] Prepare run for all replicas: `gmx grompp -f "../nvt.mdp" -c "em/em_R.gro" -r "em/em_R.gro" -p "../top/R/topol.top" -o "nvt_R.tpr"`
-  - R (), R2 (), R3 (), Q (-1345325316), Q2 (1993538489), Q3 (-5252099), H (), H2 (), H3 (), 7Z21_R (-1146667139), 7Z21_R2 (-43160577), 7Z21_R3 (-572575041) 
+  - R (), R2 (), R3 (), Q (-1345325316), Q2 (1993538489), Q3 (-5252099), H (-570591745), H2 (2145804218), H3 (2134898591), 7Z21_R (-1146667139), 7Z21_R2 (-43160577), 7Z21_R3 (-572575041) 
 - [X] Run all replicas: `mpirun gmx_mpi mdrun -s "nvt_7Z21_R.tpr" -deffnm "nvt_7Z21_R" -ntomp 12`
 - Note: The process is similar to the above.
 - Note: Make another subfolder _nvt_ in the e.g. _R_ and move the respective files there (to clean up your brain).
@@ -101,7 +101,8 @@ We use GROMACS 2025.2 with the CHARMM force field.
 ### NPT equilibrations (500 ps)
 
 - [X] Upload the _npt.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
-- [X] Prepare run for all replicas: `gmx grompp -f "../npt.mdp" -c "nvt/nvt_R.gro" -r "nvt/nvt_R.gro" -p "../top/9R/topol.top" -o "npt_R.tpr" `
+- [X] Prepare run for all replicas: `gmx grompp -f "../npt.mdp" -c "nvt/nvt_R.gro" -r "nvt/nvt_R.gro" -p "../top/R/topol.top" -o "npt_R.tpr" `
+  - R (), R2 (), R3 (), Q (629143539), Q2 (2130443261), Q3 (2139093215), H (), H2 (), H3 (), 7Z21_R (), 7Z21_R2 (), 7Z21_R3 ()
 - [X] Run all replicas: `mpirun gmx_mpi mdrun -s "npt_R.tpr" -deffnm "npt_R" -ntomp 12`
 - Note: The process is similar to the above.
 - Note: Make another subfolder _npt_ in the e.g. _R_ and move the respective files there (to clean up your brain).
