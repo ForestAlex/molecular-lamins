@@ -112,7 +112,8 @@ We use GROMACS 2025.2 with the CHARMM force field.
 ## PRODUCTION RUN (1-2 µs)
 
 - [X] Upload the md.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
-- [X] Prepare run for all replicas: `gmx grompp -f "../md.mdp" -c "npt/npt_R.gro" -p "../top/R/topol.top" -t "../npt/npt_R.cpt" -o "production_md_R.tpr"` 
+- [X] Prepare run for all replicas: `gmx grompp -f "../md.mdp" -c "npt/npt_R.gro" -p "../top/R/topol.top" -t "npt/npt_R.cpt" -o "production_md_R.tpr"`
+- [X] This is the run command you will need:  `mpirun gmx_mpi mdrun -s "production_md_R.tpr" -deffnm "production_md_R" -ntomp 12`
 
 
 # ANALYZING MD: Clustering and extracting subsets (now we switch to the large 9J8M runs)
@@ -147,7 +148,19 @@ We need to extract a subset of the full trajectory for analysis, then further up
   - [X] Choose _Group 32: LMNA_ (to calculate RMSD for)
   - [X] Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
   - [X] Note: These are now in _cluster-lamin_ (as these are centered/aligned on lamin).
+- [X] Optional: Cluster the extracted 1000 frames per 3x3 replicas **at cutoff 0.15 but only on C-alphas** (use the same R/H/Q index file for X,X2,X3 respectively): `gmx cluster -f R3_centered-1000-frames.xtc -s raven_md_9J8M_R3.tpr -n expanded_9J8M_R_DNA-protein.ndx -b 0 -cutoff 0.15 -method gromos -om cluster-lamin-ca-0.15/rmsd-raw.xpm -o cluster-lamin-ca-0.15/rmsd-clust.xpm -g cluster-lamin-ca-0.15/cluster.log -dist cluster-lamin-ca-0.15/rmsd-dist.xvg -conv cluster-lamin-ca-0.15/mc-conv.xvg -sz cluster-lamin-ca-0.15/clustsize.xvg -tr cluster-lamin-ca-0.15/clustertrans.xpm -ntr cluster-lamin-ca-0.15/clustertrans.xvg -clid cluster-lamin-ca-0.15/clusterid.xvg -cl cluster-lamin-ca-0.15/clusters.pdb -clndx cluster-lamin-ca-0.15/clindex.ndx`
+  - [X] Choose _Group 36: LMNA & CA_ (to calculate RMSD for)
+  - [X] Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
+  - [X] Note: These are now in _cluster-lamin_ (as these are centered/aligned on lamin).
 - [X] Optional: make another directory (if renamed): `mkdir cluster`
   - [X] **Cluster at cutoff = 0.3**:  `gmx cluster -f H_centered-1000-frames.xtc -s raven_md_9J8M_H.tpr -n cluster_9J8M_H-DNA-protein.ndx -b 0 -cutoff 0.3 -method gromos -om cluster/rmsd-raw-outside.xpm -o cluster/rmsd-clust-outside.xpm -g cluster/cluster-outside.log -dist cluster/rmsd-dist-outside.xvg -conv cluster/mc-conv-outside.xvg -sz cluster/clustsize-outside.xvg -tr cluster/clustertrans-outside.xpm -ntr cluster/clustertrans-outside.xvg -clid cluster/clusterid-outside.xvg -cl cluster/clusters-outside.pdb -clndx cluster/clindex-outside.ndx`
   - [X] Use the same cluster command, but choose _Group 34: system-no-lmna_ (to cluster on the counterpart)
   - [X] Choose _Group 35: system_with_LMNA_
+
+
+### Make new index files
+- [X] To make an index file from the starting one **please use atoms**. Our system has many chains and residues or positions would not be unique.
+- [X] Go to a _.gro_ file which holds your system. Open it in text editor. Find the atom numbers.
+- [X] Run:
+- [X] Type _a 1-12_ (place your respective atom numbers)
+- [X] Type _name 37 MYGROUPNAME_ (replace with respective atom numbers) 
