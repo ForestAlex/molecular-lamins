@@ -111,4 +111,43 @@ We use GROMACS 2025.2 with the CHARMM force field.
 
 ## PRODUCTION RUN (1-2 µs)
 
-- [X] Upload the _npt.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
+- [X] Upload the md.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
+- [X] Prepare run for all replicas: `gmx grompp -f "../md.mdp" -c "npt/npt_R.gro" -p "../top/R/topol.top" -t "../npt/npt_R.cpt" -o "production_md_R.tpr"` 
+
+
+# ANALYZING MD: Clustering and extracting subsets (now we switch to the large 9J8M runs)
+
+We need to extract a subset of the full trajectory for analysis, then further upon this cluster. Otherwise, the data gets expensively large quickly. First, I made index files with the respective atoms per chain in protein group for analysis (See this GitHub repository for files.)
+
+### Subsampling and centering trajectories
+
+- [X] Make a new _analysis_ folder in your master directory
+- [X] Make subfolders per replica in this master directory
+- [X] **Subsample** every 100th frame: `gmx trjconv -s raven_md_9J8M_R.tpr -f "../../9J8M_R/raven_md_9J8M_R.xtc" -skip 100 -o R_nojump-1000-frames.xtc -pbc nojump -n cluster_9J8M_H-DNA-protein.ndx`
+  - [X] Note: This command samples from the run folder (_../.._) into the analysis folder. Do not copy the .xtc, you or your computer will die. 
+  - [X]  Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
+  - Note: This command with **nojump** removes the periodic boundary conditions to place your molecule in one unit cell. But further steps are needed to make trajectories extracted analyzable.  
+- [X] **Cluster:** `gmx trjconv -s raven_md_9J8M_R.tpr -f R_nojump-1000-frames.xtc -o R_clustered-1000-frames.xtc -pbc cluster -n cluster_9J8M_R-DNA-protein.ndx`
+  - [X] Choose _Group 34: system_without_LMNA_ (this is like putting a frame around lamin, to not confound analysis on clustering already here)
+  - [X] Choose _Group 35: system_with_LMNA_ (to output all)
+  - [X] Note: Without clustering, the centering does not often succeed and you get (subsampled) trajectories that do not run as a smooth movie around the object you like. So they would be correct, but you would not be able to see the important movements, between all the rapid movements.
+- [X] **Center:** `gmx trjconv -s raven_md_9J8M_R.tpr -f R_clustered-1000-frames.xtc -o R_centered-1000-frames.xtc -center -pbc mol -ur compact -n cluster_9J8M_R-DNA-protein.ndx`
+  - [X] Choose _Group 34: system_without_LMNA_ (again, this helps to center on the frame and build a center stage on which your molecule can dance)
+  - [X] Choose _Group 35: system_with_LMNA_ (to output all)
+
+### Clustering
+
+- [X] `cd 2026_03-Ig-fold-M-high-mobility/analysis/9J8M_R`
+- [X] Open directory for output files: `mkdir cluster-lamin-0.2` 
+- [X] Cluster the extracted 1000 frames per 3x3 replicas **at cutoff 0.2** (use the same R/H/Q index file for X,X2,X3 respectively): `gmx cluster -f R2_centered-1000-frames.xtc -s raven_md_9J8M_R2.tpr -n cluster_9J8M_R-DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-lamin-0.2/rmsd-raw.xpm -o cluster-lamin-0.2/rmsd-clust.xpm -g cluster-lamin-0.2/cluster.log -dist cluster-lamin-0.2/rmsd-dist.xvg -conv cluster-lamin-0.2/mc-conv.xvg -sz cluster-lamin-0.2/clustsize.xvg -tr cluster-lamin-0.2/clustertrans.xpm -ntr cluster-lamin-0.2/clustertrans.xvg -clid cluster-lamin-0.2/clusterid.xvg -cl cluster-lamin-0.2/clusters.pdb -clndx cluster-lamin-0.2/clindex.ndx`
+  - [X] Choose _Group 32: LMNA_ (to calculate RMSD for)
+  - [X] Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
+  - [X] Note: These are now in _cluster-lamin_ (as these are centered/aligned on lamin).
+- [X] Cluster the extracted 1000 frames per 3x3 replicas **at cutoff 0.15** (use the same R/H/Q index file for X,X2,X3 respectively): `gmx cluster -f Q3_centered-1000-frames.xtc -s raven_md_9J8M_Q3.tpr -n cluster_9J8M_Q-DNA-protein.ndx -b 0 -cutoff 0.15 -method gromos -om cluster-lamin-0.15/rmsd-raw.xpm -o cluster-lamin-0.15/rmsd-clust.xpm -g cluster-lamin-0.15/cluster.log -dist cluster-lamin-0.15/rmsd-dist.xvg -conv cluster-lamin-0.15/mc-conv.xvg -sz cluster-lamin-0.15/clustsize.xvg -tr cluster-lamin-0.15/clustertrans.xpm -ntr cluster-lamin-0.15/clustertrans.xvg -clid cluster-lamin-0.15/clusterid.xvg -cl cluster-lamin-0.15/clusters.pdb -clndx cluster-lamin-0.15/clindex.ndx`
+  - [X] Choose _Group 32: LMNA_ (to calculate RMSD for)
+  - [X] Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
+  - [X] Note: These are now in _cluster-lamin_ (as these are centered/aligned on lamin).
+- [X] Optional: make another directory (if renamed): `mkdir cluster`
+  - [X] **Cluster at cutoff = 0.3**:  `gmx cluster -f H_centered-1000-frames.xtc -s raven_md_9J8M_H.tpr -n cluster_9J8M_H-DNA-protein.ndx -b 0 -cutoff 0.3 -method gromos -om cluster/rmsd-raw-outside.xpm -o cluster/rmsd-clust-outside.xpm -g cluster/cluster-outside.log -dist cluster/rmsd-dist-outside.xvg -conv cluster/mc-conv-outside.xvg -sz cluster/clustsize-outside.xvg -tr cluster/clustertrans-outside.xpm -ntr cluster/clustertrans-outside.xvg -clid cluster/clusterid-outside.xvg -cl cluster/clusters-outside.pdb -clndx cluster/clindex-outside.ndx`
+  - [X] Use the same cluster command, but choose _Group 34: system-no-lmna_ (to cluster on the counterpart)
+  - [X] Choose _Group 35: system_with_LMNA_
