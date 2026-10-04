@@ -163,4 +163,9 @@ We need to extract a subset of the full trajectory for analysis, then further up
 - [X] Go to a _.gro_ file which holds your system. Open it in text editor. Find the atom numbers.
 - [X] Run:
 - [X] Type _a 1-12_ (place your respective atom numbers)
-- [X] Type _name 37 MYGROUPNAME_ (replace with respective atom numbers) 
+- [X] Type _name 37 MYGROUPNAME_ (replace with respective atom numbers)
+
+### Analysis of the clusters
+- [X] Download the C-$\alpha$_**0.15** clusters for all 3 x 3 replicas.
+- [X] Analyze their states by hand.
+- [X] Create a Markov from the .xvg.  
