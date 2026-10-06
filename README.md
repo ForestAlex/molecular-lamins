@@ -168,4 +168,15 @@ We need to extract a subset of the full trajectory for analysis, then further up
 ### Analysis of the clusters
 - [X] Download the C-$\alpha$_**0.15** clusters for all 3 x 3 replicas.
 - [X] Analyze their states by hand.
-- [X] Create a Markov from the .xvg.  
+- [X] Create a Markov from the .xvg.
+
+# Analysis and comparison of the clusters with USAlign
+- [X] Download the C-$\alpha$_**0.15** clusters for all 3 x 3 replicas.
+- [X] Open one of the file in PyMol. All states appear. Click on _File_ $\rightarrow$ _Extract structure_ $\rightarrow$ _Molecule_
+- [X] Now choose the options:
+  - [X] In _Multi-File_ click the **{name}-{state}** option. (You can deselect asking for each molecule. I don't use it, and do it as bunch.)
+  - [X] In _PDB Options_ choose ✅ _write segment identifier_ and ✅ _retain atom IDs_. (VERY important to stay compatible with the GROMACS _.ndx_ files.)
+  - [X] In _Generic Options_ choose to **keep rank as in the original structure**. (VERY important to not resort the atoms in an otherwise PyMol order, that would target wrong atoms when using GROMACS _.ndx_ files for analysis.)
+  - [X] Then _Save_, create a new folder (e.g. _H2_) and put them there.
+  - NOTE: I do this analysis on my local laptop, not on the Garching cluster.  
+
