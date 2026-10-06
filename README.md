@@ -178,5 +178,27 @@ We need to extract a subset of the full trajectory for analysis, then further up
   - [X] In _PDB Options_ choose ✅ _write segment identifier_ and ✅ _retain atom IDs_. (VERY important to stay compatible with the GROMACS _.ndx_ files.)
   - [X] In _Generic Options_ choose to **keep rank as in the original structure**. (VERY important to not resort the atoms in an otherwise PyMol order, that would target wrong atoms when using GROMACS _.ndx_ files for analysis.)
   - [X] Then _Save_, create a new folder (e.g. _H2_) and put them there.
-  - NOTE: I do this analysis on my local laptop, not on the Garching cluster.  
+  - NOTE: I do this analysis on my local laptop, not on the Garching cluster.
+
+## 1. On the cluster
+- [X] Upload the folder with all structures to the cluster, I name the folder in _analysis/single-clusters_.
+- [X] Unzip with `unzip single-clusters.zip`.
+- [X] Move into the folder. Copy the _expanded....ndx_ files here.
+- [X] Open a new Jupyter notebook. Run `!module load gromacs/2025.2` in a Jupyter cell. It runs this in the command line.
+- [X] In the normal command line, calculate the SASAs (see the Jupyter notebook _2_ in this Repository).
+- [X] Run the command: ``
+  - NOTE: We need **LMNA**, **BAFs** and **LMNA+BAFs** to calculate the buried area as difference: $\Delta = \frac{1}{2}\cdot SASA_{LMNA} + SASA_{BAFs} - SASA_{complex}$. 
+- [X] For BAF-BAF dimers, adjust the index file: Run in the command line `gmx make_ndx -f "../9J8M_R/raven_md_9J8M_R.tpr" -n "expanded_9J8M_R_DNA-protein.ndx" -o "expanded_9J8M_R_DNA-protein.ndx"`
+  - [X] Type `a 23960-26735`.
+  - [X] Type `name 40 BAF_dimer`.
+  - [X] Save with `q`.
+- [X] For LMNA-BAF-BAF tetramer, adjust the index file (similar to above).
+  - [X] For **R** (WT) type `a 23960-28578`, then `name LMNA+BAFs`.
+  - [X] For **Q/H** (mut.) type `a 23960-28571`, then `name LMNA+BAFs`. (Or `name BAF_LMNA_trimer`. See: The mutant amino acids have less atoms in total.)
+- [X] Plot the surface area over the trajectories.
+
+## 2. On single files
+Now we want to get the values per uploaded cluster. We write a .sh script.
+- [X] Include an iterative loop that creates from this simple command (see that we use 2x _.pdb_ files and no _.xtc_ file) `gmx sasa -f "R/R-ca-0.15-clusters_1.pdb" -s "R/R-ca-0.15-clusters_1.pdb" -n "expanded_9J8M_R_DNA-protein.ndx" -o "R/sasa_lamin_R-1.xvg" -surface 'group "LMNA+BAFs"'` a loop that runs for all folders in the command line.
+- [X] 
 
