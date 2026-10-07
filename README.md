@@ -186,7 +186,7 @@ We need to extract a subset of the full trajectory for analysis, then further up
 - [X] Move into the folder. Copy the _expanded....ndx_ files here.
 - [X] Open a new Jupyter notebook. Run `!module load gromacs/2025.2` in a Jupyter cell. It runs this in the command line.
 - [X] In the normal command line, calculate the SASAs (see the Jupyter notebook _2_ in this Repository).
-- [X] Run the command: ``
+- [X] Run the command: `gmx sasa -f "../9J8M_Q3/Q3_centered-1000-frames.xtc" -s "../9J8M_Q3/raven_md_9J8M_Q3.tpr" -n expanded_9J8M_Q_DNA-protein.ndx -o "Q3/sasa_LMNA.xvg" -surface 'group "LMNA"'`
   - NOTE: We need **LMNA**, **BAFs** and **LMNA+BAFs** to calculate the buried area as difference: $\Delta = \frac{1}{2}\cdot SASA_{LMNA} + SASA_{BAFs} - SASA_{complex}$. 
 - [X] For BAF-BAF dimers, adjust the index file: Run in the command line `gmx make_ndx -f "../9J8M_R/raven_md_9J8M_R.tpr" -n "expanded_9J8M_R_DNA-protein.ndx" -o "expanded_9J8M_R_DNA-protein.ndx"`
   - [X] Type `a 23960-26735`.
@@ -206,10 +206,14 @@ Now we want to get the values per uploaded cluster. We write a .sh script.
 
 ## Analyzing histones
 - [X] We need to add **E63**, **S112** and the tail **LPK** to the index files.
+  - NOTE: `gmx make_ndx -f "../9J8M_Q/raven_md_9J8M_Q.tpr" -n "expanded_9J8M_Q_DNA-protein.ndx" -o "expanded_9J8M_Q_DNA_protein.ndx"`
 - [X] We need to add the whole histone H4 + H3 as one cluster (tetramer).
 - [X] We need to add the histones H2A + H2B as one cluster (2 x dimer).
-  - [X] Use `a 1-2900 & a 6135-9173` for `name 42 H3_H4_tetramer`
-  - [X] Use `a 2901-6134 & a 9174-12282` for `name 43 H2A_H2B_dimers`
-  - [X] Use `a 4581-4636 & a 10788-10843` for `name 44 H2A_tail_LPK`
-` 
+  - [X] Use `a 1-2900 | a 6135-9173` for `name 42 H3_H4_tetramer` (5939 atoms)
+  - [X] Use `a 2901-6134 | a 9174-12282` for `name 43 H2A_H2B_dimers` (6343 atoms)
+  - [X] Use `a 4581-4636 | a 10788-10843` for `name 44 H2A_tail_LPK` (112 atoms)
+
+- [X] We generate a new _1-histone-sasa.sh_ bash script.
+- [X] This time, include a loop over the timeseries and a loop over the single files in this one combines _.sh_.
+- [X] In the command line run _sh 1-histone-sasa.sh_.  
 
