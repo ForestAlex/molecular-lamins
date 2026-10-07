@@ -212,6 +212,7 @@ Now we want to get the values per uploaded cluster. We write a .sh script.
   - [X] Use `a 1-2900 | a 6135-9173` for `name 42 H3_H4_tetramer` (5939 atoms)
   - [X] Use `a 2901-6134 | a 9174-12282` for `name 43 H2A_H2B_dimers` (6343 atoms)
   - [X] Use `a 4581-4636 | a 10788-10843` for `name 44 H2A_tail_LPK` (112 atoms)
+  - [X] Use `42 | 43` and `name 45 histones` 
 
 - [X] We generate a new _1-histone-sasa.sh_ bash script.
 - [X] This time, include a loop over the timeseries and a loop over the single files in this one combines _.sh_.
