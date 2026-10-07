@@ -200,5 +200,12 @@ We need to extract a subset of the full trajectory for analysis, then further up
 ## 2. On single files
 Now we want to get the values per uploaded cluster. We write a .sh script.
 - [X] Include an iterative loop that creates from this simple command (see that we use 2x _.pdb_ files and no _.xtc_ file) `gmx sasa -f "R/R-ca-0.15-clusters_1.pdb" -s "R/R-ca-0.15-clusters_1.pdb" -n "expanded_9J8M_R_DNA-protein.ndx" -o "R/sasa_lamin_R-1.xvg" -surface 'group "LMNA+BAFs"'` a loop that runs for all folders in the command line.
-- [X] 
+- [X] Run `sh sasa.sh` in a directory which holds subfolders with all the clusters to analyze in once. NOTE: Generates _.xvg_ files.
+- [X] Run a Juypter notebook that makes the analysis plots from the _.xvg_ files.
+
+
+## Analyzing histones
+- [X] We need to add **E63**, **S112** and the tail **LPK** to the index files.
+- [X] We need to add the whole histone H4 + H3 as one cluster (tetramer).
+- [X] We need to add the histones H2A + H2B as one cluster (2 x dimer).
 
