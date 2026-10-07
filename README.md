@@ -208,4 +208,8 @@ Now we want to get the values per uploaded cluster. We write a .sh script.
 - [X] We need to add **E63**, **S112** and the tail **LPK** to the index files.
 - [X] We need to add the whole histone H4 + H3 as one cluster (tetramer).
 - [X] We need to add the histones H2A + H2B as one cluster (2 x dimer).
+  - [X] Use `a 1-2900 & a 6135-9173` for `name 42 H3_H4_tetramer`
+  - [X] Use `a 2901-6134 & a 9174-12282` for `name 43 H2A_H2B_dimers`
+  - [X] Use `a 4581-4636 & a 10788-10843` for `name 44 H2A_tail_LPK`
+` 
 
