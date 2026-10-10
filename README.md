@@ -148,7 +148,7 @@ We need to extract a subset of the full trajectory for analysis, then further up
   - [X] Choose _Group 32: LMNA_ (to calculate RMSD for)
   - [X] Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
   - [X] Note: These are now in _cluster-lamin_ (as these are centered/aligned on lamin).
-- [X] Optional: Cluster the extracted 1000 frames per 3x3 replicas **at cutoff 0.15 but only on C-alphas** (use the same R/H/Q index file for X,X2,X3 respectively): `gmx cluster -f R3_centered-1000-frames.xtc -s raven_md_9J8M_R3.tpr -n expanded_9J8M_R_DNA-protein.ndx -b 0 -cutoff 0.15 -method gromos -om cluster-lamin-ca-0.15/rmsd-raw.xpm -o cluster-lamin-ca-0.15/rmsd-clust.xpm -g cluster-lamin-ca-0.15/cluster.log -dist cluster-lamin-ca-0.15/rmsd-dist.xvg -conv cluster-lamin-ca-0.15/mc-conv.xvg -sz cluster-lamin-ca-0.15/clustsize.xvg -tr cluster-lamin-ca-0.15/clustertrans.xpm -ntr cluster-lamin-ca-0.15/clustertrans.xvg -clid cluster-lamin-ca-0.15/clusterid.xvg -cl cluster-lamin-ca-0.15/clusters.pdb -clndx cluster-lamin-ca-0.15/clindex.ndx`
+- [X] Optional: Cluster the extracted 1000 frames per 3x3 replicas **at cutoff 0.15 but only on C-alphas** (use the same R/H/Q index file for X,X2,X3 respectively): `gmx cluster -f H3_centered-1000-frames.xtc -s raven_md_9J8M_H3.tpr -n expanded_9J8M_H_DNA-protein.ndx -b 0 -cutoff 0.15 -method gromos -om cluster-lamin-ca-0.15/rmsd-raw.xpm -o cluster-lamin-ca-0.15/rmsd-clust.xpm -g cluster-lamin-ca-0.15/cluster.log -dist cluster-lamin-ca-0.15/rmsd-dist.xvg -conv cluster-lamin-ca-0.15/mc-conv.xvg -sz cluster-lamin-ca-0.15/clustsize.xvg -tr cluster-lamin-ca-0.15/clustertrans.xpm -ntr cluster-lamin-ca-0.15/clustertrans.xvg -clid cluster-lamin-ca-0.15/clusterid.xvg -cl cluster-lamin-ca-0.15/clusters.pdb -clndx cluster-lamin-ca-0.15/clindex.ndx`
   - [X] Choose _Group 36: LMNA & CA_ (to calculate RMSD for)
   - [X] Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
   - [X] Note: These are now in _cluster-lamin_ (as these are centered/aligned on lamin).
@@ -206,7 +206,7 @@ Now we want to get the values per uploaded cluster. We write a .sh script.
 
 ## Analyzing histones
 - [X] We need to add **E63**, **S112** and the tail **LPK** to the index files.
-  - NOTE: `gmx make_ndx -f "../9J8M_Q/raven_md_9J8M_Q.tpr" -n "expanded_9J8M_Q_DNA-protein.ndx" -o "expanded_9J8M_Q_DNA_protein.ndx"`
+  - NOTE: `gmx make_ndx -f "../9J8M_Q/raven_md_9J8M_Q.tpr" -n "expanded_9J8M_Q_DNA-protein.ndx" -o "expanded_9J8M_Q_DNA-protein.ndx"`
 - [X] We need to add the whole histone H4 + H3 as one cluster (tetramer).
 - [X] We need to add the histones H2A + H2B as one cluster (2 x dimer).
   - [X] Use `a 1-2900 | a 6135-9173` for `name 42 H3_H4_tetramer` (5939 atoms)
@@ -216,5 +216,25 @@ Now we want to get the values per uploaded cluster. We write a .sh script.
 
 - [X] We generate a new _1-histone-sasa.sh_ bash script.
 - [X] This time, include a loop over the timeseries and a loop over the single files in this one combines _.sh_.
-- [X] In the command line run _sh 1-histone-sasa.sh_.  
+- [X] In the command line run _sh 1-histone-sasa.sh_.
+  
+- [X] Note: Next, we want to analyze the distance between the H2A termini.
+- [X] Use `del 44` (combined, remove).
+- [X] Use `a 4581-4636` for `name 44 H2A_tail-1` (56 atoms)
+- [X] Use  `a 10788-10843` for `name 45 H2A_tail-2` (56 atoms)
+- Note: Add also `C3'` DNA for later with the eigenvectors:
+  - [X] `a C3*` and `name 46 C3-DNA` (368 atoms)
+  - [X] `3 | 46` and `name 47 DNAC3+proteinCA` 
+- [X] In the command line run _sh 2-histone-distances.sh_
 
+
+## Eigenvector and energy landscape analysis
+This follows: https://www.youtube.com/watch?v=IISgo_SIuj4
+
+- [X] In the _analysis_ folder, create a new folder _PCA_.
+- [X] Direct in the terminal to it and create storage folders `mkdir R R2 R3 Q Q2 Q3 H H2 H3`. 
+- [X] Create a covariance calculation `gmx covar -f "../9J8M_R/R-centered-1000-frames.xtc" -s "../9J8M_R/raven_md_9J8M_R.tpr" -n "../expanded_9J8M_R-DNA-protein.ndx" -o "R-centered-1000-eigenval.xvg" -v "R-centered-1000-eigenvec.trr"`
+- [X] Run the analyis of eigenvectors `gmx anaeig -v "R-centered-1000-eigenvec.trr" -f "../9J8M_R/R-centered-1000-frames.xtc" -eig "R-centered-1000-eigenval.xvg" -s "../9J8M_R/raven_md_9J8M_R.tpr" -2d "PCA-2dproj.xvg" -first 1 -last 2 -n "../expanded_9J8M_R-DNA-protein.ndx"`
+- [X] Run `gmx sham -f "PCA-2dproj.xvg" -ls "FEL_PCA-2dproj.xpm" -notime` for free energy calculation.
+- [X] Convert into a visible file `gmx xpm2ps -f "FEL_PCA-2dproj.xpm" -o "FEL_PCA-2dproj.eps" -rainbow red`
+- [X] Convert into PDF `convert  "FEL_PCA-2dproj.eps" "FEL_PCA-2dproj.pdf"`
