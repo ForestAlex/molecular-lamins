@@ -238,3 +238,37 @@ This follows: https://www.youtube.com/watch?v=IISgo_SIuj4
 - [X] Run `gmx sham -f "PCA-2dproj.xvg" -ls "FEL_PCA-2dproj.xpm" -notime` for free energy calculation.
 - [X] Convert into a visible file `gmx xpm2ps -f "FEL_PCA-2dproj.xpm" -o "FEL_PCA-2dproj.eps" -rainbow red`
 - [X] Convert into PDF `convert  "FEL_PCA-2dproj.eps" "FEL_PCA-2dproj.pdf"`
+
+
+# Analysis of 7Z21
+
+We analyze the distance and the SASA between lamin A and the BAF dimer.
+
+- [X] Go for 7Z21 to `cd analysis/7Z21_R` and run `gmx make_ndx -f "raven_md_7Z21_R.tpr" -n "index_7Z21_R-raven-gro-only-LMNA-429-546.ndx" -o "expanded_7Z21_R.ndx"`
+- [X] Type the different groups:
+  - [X] `a 1-1832` and `name 22 LMNA` (1832 atoms)
+  - [X] `a 3221-4608` and `name 23 BAF_left` (1388 atoms)
+  - [X] `a 4609-5964` and `name 24 BAF_right` (1356 atoms -Thr2 not resolved, and Arg8 side chain not resolved)
+  - [X] `a 3390-3403` and `name 25 Thr12_left` (14 atoms)
+  - [X] `a 4746-4759` and `name 26 Thr12_right` (14 atoms)
+  - [X] `a 1643-1657` and `name 27 E536_left` (15 atoms)
+  - [X] `a 62-78` and `name 28 H433_right`
+  - [X] `23 | 24` and `name 29 BAF_dimer`
+  - [X] `22 | 23 | 24` and `name 30 LMNA_BAF_trimer` 
+
+- [X] Calculate SASA:
+  - [X] `gmx sasa -f "R2_centered-1000-frames.xtc" -s "raven_md_7Z21_R2.tpr" -n expanded_7Z21_R.ndx -o "sasa/sasa_LMNA.xvg" -surface 'group "LMNA"'`
+  - [X] `gmx sasa -f "R2_centered-1000-frames.xtc" -s "raven_md_7Z21_R2.tpr" -n expanded_7Z21_R.ndx -o "sasa/sasa_BAF_dimer.xvg" -surface 'group "BAF_dimer"'`
+  - [X] `gmx sasa -f "R2_centered-1000-frames.xtc" -s "raven_md_7Z21_R2.tpr" -n expanded_7Z21_R.ndx -o "sasa/sasa_LMNA_BAF_trimer.xvg" -surface 'group "LMNA_BAF_trimer"'`
+     
+- [X] Calculate minimum distance:
+  - [X] `gmx `
+    
+- [X] Calculate angle:
+  - [X] We calculate the rotation angle between BAF and lamin via the axis between the two BAF's Thr12 and the lamin's E536 and H433: `gmx gangle -f "R_centered-1000-frames.xtc" -s "raven_md_7Z21_R.tpr" -g1 vector -g2 vector -n "expanded_7Z21_R.ndx" -group1 'Thr12_left Thr12_right' -group2 'E536_left plus H433_right' -selrpos res_com -seltype res_com -oav "gangle/rotation.xvg" -oh "gangle/rotation_hist.xvg"`
+  - Note: This did not work for me, so I use `-group1 "atom 3392 4748" -group2 "atom 1645 64"` to define by C$\alpha$ atom.
+  - Note: This did not work for me either, so I added to the index file:
+    - \[ Thr12_left_right_axis ] 3392 4748
+    - \[ E536_H433_left_right_axis ] 1645   64
+    - `gmx gangle -f "R_centered-1000-frames.xtc" -s "raven_md_7Z21_R.tpr" -g1 vector -g2 vector -n "expanded_7Z21_R.ndx" -group1 'Thr12_left_right_axis' -group2 'group E536_H433_left_right_axis' -oav "gangle/rotation.xvg" -oh "gangle/rotation_hist.xvg"`
+  
