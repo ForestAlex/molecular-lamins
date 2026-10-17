@@ -262,8 +262,11 @@ We analyze the distance and the SASA between lamin A and the BAF dimer.
   - [X] `gmx sasa -f "R2_centered-1000-frames.xtc" -s "raven_md_7Z21_R2.tpr" -n expanded_7Z21_R.ndx -o "sasa/sasa_LMNA_BAF_trimer.xvg" -surface 'group "LMNA_BAF_trimer"'`
      
 - [X] Calculate minimum distance:
-  - [X] `gmx `
-    
+  - [X] Between left Thr12 and lamin A: `gmx mindist -f "R3_centered-1000-frames.xtc" -s "raven_md_7Z21_R3.tpr" -n "expanded_7Z21_R.ndx" -on dist/num_contacts_R3-left.xvg -od dist/mindist_R3-left.xvg -d 0.45` # not necessary: -or dist/mindist_res_R-left.xvg
+  - [X] Choose _group 22_ and _group 25_
+  - [X] Between right Thr12 and lamin A: `gmx mindist -f "R3_centered-1000-frames.xtc" -s "raven_md_7Z21_R3.tpr" -n "expanded_7Z21_R.ndx" -on dist/num_contacts_R3-right.xvg -od dist/mindist_R3-right.xvg -d 0.45` # not necessary: -or dist/mindist_res_R-right.xvg 
+  - [X] Choose _group 22_ and _group 26_
+        
 - [X] Calculate angle:
   - [X] We calculate the rotation angle between BAF and lamin via the axis between the two BAF's Thr12 and the lamin's E536 and H433: `gmx gangle -f "R_centered-1000-frames.xtc" -s "raven_md_7Z21_R.tpr" -g1 vector -g2 vector -n "expanded_7Z21_R.ndx" -group1 'Thr12_left Thr12_right' -group2 'E536_left plus H433_right' -selrpos res_com -seltype res_com -oav "gangle/rotation.xvg" -oh "gangle/rotation_hist.xvg"`
   - Note: This did not work for me, so I use `-group1 "atom 3392 4748" -group2 "atom 1645 64"` to define by C$\alpha$ atom.
