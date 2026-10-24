@@ -1,4 +1,4 @@
-# Simulation Tutorial for Lamin A-containing Complexes
+<img width="157" height="48" alt="grafik" src="https://github.com/user-attachments/assets/6cac6555-f6d4-44b9-b76b-0d1c4a9f3178" /># Simulation Tutorial for Lamin A-containing Complexes
 
 We use GROMACS 2025.2 with the CHARMM force field.
 
@@ -274,4 +274,25 @@ We analyze the distance and the SASA between lamin A and the BAF dimer.
     - \[ Thr12_left_right_axis ] 3392 4748
     - \[ E536_H433_left_right_axis ] 1645   64
     - `gmx gangle -f "R_centered-1000-frames.xtc" -s "raven_md_7Z21_R.tpr" -g1 vector -g2 vector -n "expanded_7Z21_R.ndx" -group1 'Thr12_left_right_axis' -group2 'group E536_H433_left_right_axis' -oav "gangle/rotation.xvg" -oh "gangle/rotation_hist.xvg"`
-  
+
+
+### Analysis of histones
+To analyze the distance between the histones, we use the opening of the histones in the butterfly-like motion. We use the distance between E63 in H4 and S112 in H2B https://academic.oup.com/nar/article/39/8/3093/2411613?login=false.
+
+  - [X] Between H4 E63 and H2B S112: Create new index entry: `gmx make_ndx -f "raven_md_9J8M_R.tpr" -n "../expanded_9J8M_R_DNA-protein.ndx" -o "expanded_9J8M_R_DNA-protein.ndx"`
+    - [X] `a 2261-2275` 
+    - [X] `name 48 E63_H4-front`
+    - [X] `a 5947-5957` 
+    - [X] `name 49 SER112_H2B-front`
+    - [X] `a 8534-8548` 
+    - [X] `name 50 E63_H4-back`
+    - [X] `a 12095-12105` 
+    - [X] `name 51 SER112_H2B-back`
+    - [X] `a 1573-1596` 
+    - [X] `name 52 ARG131_H3-front`
+    - [X] `a 7729-7752` 
+    - [X] `name 53 ARG131_H3-back`
+  - [ ] `gmx mindist -f "R_centered-1000-frames.xtc" -s "raven_md_9J8M_R.tpr" -n "expanded_9J8M_R_DNA-protein.ndx" -od "../distance-E63-S112/mindist_E63-S112-R.xvg"`
+  - [X] Between H4 E63 and H2B S112: `gmx mindist -f "R_centered-1000-frames.xtc" -s "raven_md_9J8M_R.tpr" -n "expanded_9J8M_R_DNA-protein.ndx" -od "../distance-E63-S112/mindist_E63-S112-R.xvg"` 
+
+
