@@ -1,4 +1,4 @@
-<img width="157" height="48" alt="grafik" src="https://github.com/user-attachments/assets/6cac6555-f6d4-44b9-b76b-0d1c4a9f3178" /># Simulation Tutorial for Lamin A-containing Complexes
+# Simulation Tutorial for Lamin A-containing Complexes
 
 We use GROMACS 2025.2 with the CHARMM force field.
 
@@ -295,4 +295,13 @@ To analyze the distance between the histones, we use the opening of the histones
   - [ ] `gmx mindist -f "R_centered-1000-frames.xtc" -s "raven_md_9J8M_R.tpr" -n "expanded_9J8M_R_DNA-protein.ndx" -od "../distance-E63-S112/mindist_E63-S112-R.xvg"`
   - [X] Between H4 E63 and H2B S112: `gmx mindist -f "R_centered-1000-frames.xtc" -s "raven_md_9J8M_R.tpr" -n "expanded_9J8M_R_DNA-protein.ndx" -od "../distance-E63-S112/mindist_E63-S112-R.xvg"` 
 
+## Extending the structures for histones
+
+The H2A histone is not resolved in its tail after **LPK**. To do this, we went back to the raw electron density map and refined in Coot a manual, possible state of the flexible tail. 
+
+- [X] Download the EMDB map _EMD-61231_, use the _Primary 3D volume_ from PDB or this website: https://www.ebi.ac.uk/emdb/EMD-61231. The file should be extracted and is named _emd_61231.map_.
+- [X] Open Coot.
+- [X] Via _File_ and _Open Map_ (take care to not choose coordinates) open the electron density first.
+- [X] Then open the _histones-lmna.pdb_ file via _Open Coordinate File_ (the corresponding solved structure).
+- [X] Find chain **C** and **G**. Extend the tail by using the _Add residue_ function.   
 
