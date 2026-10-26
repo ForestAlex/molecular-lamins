@@ -305,3 +305,23 @@ The H2A histone is not resolved in its tail after **LPK**. To do this, we went b
 - [X] Then open the _histones-lmna.pdb_ file via _Open Coordinate File_ (the corresponding solved structure).
 - [X] Find chain **C** and **G**. Extend the tail by using the _Add residue_ function.   
 
+
+### Recentering the files and making movies
+
+To make movies from the trajectories, it is a bit tricky with complexes to have nothing jump in PyMol.
+- [X] In GROMACS on the Raven server make a new directory as or under _analysis/9J8M_R/R-center-mol_.
+  - [X]  From the -nojump 1000 subsampled initial frames, start in this folder another command iteration: `gmx trjconv -s ../raven_md_9J8M_R.tpr -f ../R_nojump-1000-frames.xtc -o R_clustered-1000-frames.xtc -pbc cluster -n ../../expanded_9J8M_R_DNA-protein.ndx`
+    - [X] Choose _35_. (Cluster on everything with _LMNA_.)  
+  - [X]  `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_clustered-1000-frames.xtc -o R_nojump-1000-frames.xtc -pbc nojump -n ../../expanded_9J8M_R_DNA-protein.ndx`
+    - [X] This applies _nojump_ again.
+  - [x] This centers everything again, choose again _35_ when prompted: `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_nojump-1000-frames.xtc -o R_center-1000-frames.xtc -center -n ../../expanded_9J8M_R_DNA-protein.ndx`
+  - [X] This makes all molecules in the end whole: `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_center-1000-frames.xtc -o R_mol-compact-1000-frames.xtc -pbc mol -ur compact -n ../../expanded_9J8M_R_DNA-protein.ndx`.
+  - [X] Download this `R_mol-compact-1000-frames.xtc`. 
+  - [X] Additionally, we want to download the first frame in PDB format (always choose _35_): _gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_mol-compact-1000-frames.xtc -o R_frame_0ns.pdb -dump 0 -n ../../expanded_9J8M_R_DNA-protein.ndx_.
+
+**Then in PyMOL:**
+- [X] Open this last downloaded _R_frame_0ns.pdb_.
+- [X] Drag into the window the downloaded _R_mol-compact-1000-frames.xtc_.
+- [X] If you like center on a specific chain **and make sure to turn boundary conditions off** with `pbc=0`: `intra_fit R_frame_0ns.pdb and chain M, pbc=0`.
+- [X] Set the movie (for 1000 frames): `mset 1-1000`
+- [x] Produce the movie `movie.produce R_movie.mp4, quality=90`.   
