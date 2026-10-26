@@ -317,7 +317,7 @@ To make movies from the trajectories, it is a bit tricky with complexes to have 
   - [x] This centers everything again, choose again _35_ when prompted: `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_nojump-1000-frames.xtc -o R_center-1000-frames.xtc -center -n ../../expanded_9J8M_R_DNA-protein.ndx`
   - [X] This makes all molecules in the end whole: `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_center-1000-frames.xtc -o R_mol-compact-1000-frames.xtc -pbc mol -ur compact -n ../../expanded_9J8M_R_DNA-protein.ndx`.
   - [X] Download this `R_mol-compact-1000-frames.xtc`. 
-  - [X] Additionally, we want to download the first frame in PDB format (always choose _35_): _gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_mol-compact-1000-frames.xtc -o R_frame_0ns.pdb -dump 0 -n ../../expanded_9J8M_R_DNA-protein.ndx_.
+  - [X] Additionally, we want to download the first frame in PDB format (always choose _35_): `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_mol-compact-1000-frames.xtc -o R_frame_0ns.pdb -dump 0 -n ../../expanded_9J8M_R_DNA-protein.ndx`.
 
 **Then in PyMOL:**
 - [X] Open this last downloaded _R_frame_0ns.pdb_.
