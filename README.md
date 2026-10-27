@@ -303,9 +303,15 @@ The H2A histone is not resolved in its tail after **LPK**. To do this, we went b
 - [X] Open Coot.
 - [X] Via _File_ and _Open Map_ (take care to not choose coordinates) open the electron density first.
 - [X] Then open the _histones-lmna.pdb_ file via _Open Coordinate File_ (the corresponding solved structure).
-- [X] Find chain **C** and **G**. Extend the tail by using the _Add residue_ function.   
+- [X] Find chain **C** and **G**. Extend the tail by using the _Add residue_ function.
+- [X] Then mutate to the respective H2A or H2AX residues.
+- [X] For the last residue, add a -COOH (instead of only the C=O carbonyl present within a peptide chain) by clicking _Calculate_ > _Otehr Modelling Tools_ > _Add OXT to Residue_ and choose C-terminus.
+- [X] Open the H2A and the H2AX in PyMol.
+- [X] Make H2AX mutants with **R**, **Q**, **H** (double mutants on both C, G chain).
+- [X] Then upload to the cluster.        
 
-H2A: MSGRGKQGGKARAKAKTRSSRAGLQFPVGRVRRLLRKGNYAERVGAGAPVYLAAVLEYLTAEILELAGNAARDNKKTRIIPRHLQLAIRNDEELNKLLGKVTIAQGGVLPNIQAVLLPK|KT>>ESHHKAKGK
+H2A: MSGRGKQGGKA>>(C-Chain:)RAKA>>(G-Chain:)KTRSSRAGLQFPVGRVR(H?)RLLRKGNYA(S?)ERVGAGAPVYLAAVLEYLTAEILELAGNAARDNKKTRIIPRHLQLAIRNDEELNKLLGKVTIAQGGVLPNIQAVLLPK|KT>>ESHHKAKGK
+
 
 H2AX: MSGRGK**T**GGKARAKAK**S**RSSRAGLQFPVGRV**H**RLLRKG**H**YAERVGAGAPVYLAAVLEYLTAEILELAGNAARDNKKTRIIPRHLQLAIRNDEELNKLLG**G**VTIAQGGVLPNIQAVLLPK|KT>>SATVGPKAPSGGKKATQASQEY
 
