@@ -305,6 +305,9 @@ The H2A histone is not resolved in its tail after **LPK**. To do this, we went b
 - [X] Then open the _histones-lmna.pdb_ file via _Open Coordinate File_ (the corresponding solved structure).
 - [X] Find chain **C** and **G**. Extend the tail by using the _Add residue_ function.   
 
+H2A: MSGRGKQGGKARAKAKTRSSRAGLQFPVGRVRRLLRKGNYAERVGAGAPVYLAAVLEYLTAEILELAGNAARDNKKTRIIPRHLQLAIRNDEELNKLLGKVTIAQGGVLPNIQAVLLPK|KT>>ESHHKAKGK
+
+H2AX: MSGRGK**T**GGKARAKAK**S**RSSRAGLQFPVGRV**H**RLLRKG**H**YAERVGAGAPVYLAAVLEYLTAEILELAGNAARDNKKTRIIPRHLQLAIRNDEELNKLLG**G**VTIAQGGVLPNIQAVLLPK|KT>>SATVGPKAPSGGKKATQASQEY
 
 ### Recentering the files and making movies
 
