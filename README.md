@@ -135,6 +135,23 @@ We need to extract a subset of the full trajectory for analysis, then further up
 - [X] **Center:** `gmx trjconv -s raven_md_9J8M_R.tpr -f R_clustered-1000-frames.xtc -o R_centered-1000-frames.xtc -center -pbc mol -ur compact -n cluster_9J8M_R-DNA-protein.ndx`
   - [X] Choose _Group 34: system_without_LMNA_ (again, this helps to center on the frame and build a center stage on which your molecule can dance)
   - [X] Choose _Group 35: system_with_LMNA_ (to output all)
+     
+### Redo: Subsampling on 1.3 µs trajectories 
+- [X] Make a new _analysis-1.3_ folder in your master directory
+- [X] Make subfolders per replica in this master directory
+- [X] **Subsample** every 50th frame: ``
+
+Then move the large trajectories away:
+- [X] Log from outside the clusters into a portal node (e.g. via Anaconda command line): `ssh -m hmac-sha2-256-etm@openssh.com <user>@gate.mpcdf.mpg.de`
+- [X] Log then further in, into an interactive node: `ssh <user>@raven03i.mpcdf.mpg.de`
+- [X] Type `screen`.
+- [X] Type `screen -ls` and look if you have an active screen.
+- [X] Make a link from the personal directory to the file storage (a**r**chive, named **r**): `ln -s /r/a/<user> r`
+- [X] Tar and copy the large files away to the archive (tar <destination-name> <source-name>): `tar cvzf "/r/a/<user>/"<some directory name.tar.gz>" "<some directory name as it exits now>"`
+- [X] Alternatively: Use `tmux` and this makes it possible to disconnect while you are copying: `rsync -t --partial-dir=.rsync-partial --no-whole-file --info=progress2 "<some-file-as-it-exists>" "/r/a/<user>/<some-folder-where-it-has-to-go-to>"`
+- [X] Check with: `dir /r/a/<user>` to see if present (or `df -h`)
+- [X] Log into a Raven session, remove the copied files: `rm -r <file-or-folder-you-copied>`
+  - _Note:_ You cannot see the _/r_ directory link via a Raven session.      
 
 ### Clustering
 
