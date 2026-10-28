@@ -136,10 +136,22 @@ We need to extract a subset of the full trajectory for analysis, then further up
   - [X] Choose _Group 34: system_without_LMNA_ (again, this helps to center on the frame and build a center stage on which your molecule can dance)
   - [X] Choose _Group 35: system_with_LMNA_ (to output all)
      
-### Redo: Subsampling on 1.3 µs trajectories 
-- [X] Make a new _analysis-1.3_ folder in your master directory
-- [X] Make subfolders per replica in this master directory
-- [X] **Subsample** every 50th frame: ``
+# Redo: Subsampling on 1.3 µs trajectories 
+- [X] Make a new _Analysis_ folder in your master directory
+- [X] Copy the _.tpr_ file: `cp <source> <destination>` so: `cp ../9J8M_R/raven_md_9J8M_R.tpr R1/raven_md_9J8M_R1.tpr` 
+- [X] Make subfolders per replica in this master directory (we now name **R** => **R1**)
+- [X] Check the frames in all runs (541617 atoms):
+  - R1:
+  - R2:
+  - R3:
+  - Q1:
+  - Q2:
+  - Q3:
+  - H1:
+  - H2:
+  - H3:
+- [X] **Subsample** every 50th frame: `gmx trjconv -s raven_md_9J8M_Q3.tpr -f ../../9J8M_Q3/raven_md_9J8M_Q3.xtc -b 0 -e 1300100 -skip 50 -o 9J8M_Q3_nojump-2600-frames.xtc -pbc nojump -n ../expanded_9J8M_Q_DNA-protein.ndx`
+  - [X]  Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
 
 Then move the large trajectories away:
 - [X] Log from outside the clusters into a portal node (e.g. via Anaconda command line): `ssh -m hmac-sha2-256-etm@openssh.com <user>@gate.mpcdf.mpg.de`
