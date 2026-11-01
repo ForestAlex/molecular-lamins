@@ -160,6 +160,9 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
 - [X] Center: `echo 35 35 | gmx trjconv -s H2_cluster_frame0.pdb -f H2_nojump-2600-frames.xtc -o H2_final_centered-2600-frames.xtc -center -ur compact -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_, _35_)
   - _Note:_ Do **not** use `-pbc mol` or a _.tpr_ file because these will put the center of a molecule somewhere for centering, and will destroy all the "putting into the box and aligning" steps done before above.
   - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2
+  - WORKS :))
+     
+- [X] Move the original _.xtc_ to the archive.
 
 
 **Note: This order below did not work. Likely due to non-whole molecules in beginning.**
@@ -368,19 +371,8 @@ H2AX: MSGRGK**T**GGKARAKAK**S**RSSRAGLQFPVGRV**H**RLLRKG**H**YAERVGAGAPVYLAAVLEY
 
 ### Recentering the files and making movies
 
-To make movies from the trajectories, it is a bit tricky with complexes to have nothing jump in PyMol.
-- [X] In GROMACS on the Raven server make a new directory as or under _analysis/9J8M_R/R-center-mol_.
-  - [X]  From the -nojump 1000 subsampled initial frames, start in this folder another command iteration: `gmx trjconv -s ../raven_md_9J8M_R.tpr -f ../R_nojump-1000-frames.xtc -o R_clustered-1000-frames.xtc -pbc cluster -n ../../expanded_9J8M_R_DNA-protein.ndx`
-    - [X] Choose _35_. (Cluster on everything with _LMNA_.)  
-  - [X]  `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_clustered-1000-frames.xtc -o R_nojump-1000-frames.xtc -pbc nojump -n ../../expanded_9J8M_R_DNA-protein.ndx`
-    - [X] This applies _nojump_ again.
-  - [x] This centers everything again, choose again _35_ when prompted: `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_nojump-1000-frames.xtc -o R_center-1000-frames.xtc -center -n ../../expanded_9J8M_R_DNA-protein.ndx`
-  - [X] This makes all molecules in the end whole: `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_center-1000-frames.xtc -o R_mol-compact-1000-frames.xtc -pbc mol -ur compact -n ../../expanded_9J8M_R_DNA-protein.ndx`.
-  - [X] Download this `R_mol-compact-1000-frames.xtc`. 
-  - [X] Additionally, we want to download the first frame in PDB format (always choose _35_): `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_mol-compact-1000-frames.xtc -o R_frame_0ns.pdb -dump 0 -n ../../expanded_9J8M_R_DNA-protein.ndx`.
-
-**Then in PyMOL:**
-- [X] Open this last downloaded _R1_cluster_frame0.pdb_.
+**In PyMOL:**
+- [X] Open the last downloaded _R1_cluster_frame0.pdb_.
 - [X] Drag into the window the downloaded _R_final_centered-2600-frames.xtc_.
 - [x] `hide everything`
 - [X] `color gray70, polymer`
