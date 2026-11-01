@@ -146,10 +146,12 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
 
 - [X] `module load gromacs/2025.2` 
 - [X] Make whole first (in ptmp_link/Analysis/9J8M_R1): `gmx trjconv -s ptmp_link/Analysis/9J8M_Q3/raven_md_9J8M_Q3.tpr -f 2026_03-Ig-fold-M-high-mobility/9J8M_Q3/raven_md_9J8M_Q3.xtc -o ptmp_link/Analysis/9J8M_Q3/Q3_whole.xtc -pbc whole -n ptmp_link/Analysis/expanded_9J8M_Q_DNA-protein.ndx` (choose _35_)
-  - :) Done: R1, R2, R3, H1, H2, Q1, Q2, Q3
+  - :) Done: R1 (135988 frames), R2 (131973 frames), R3 (132040 frames), H1 (130658 frames), H2 (131790 frames), Q1 (132554 frames), Q2 (131694 frames), Q3 (131872 frames)
+  - _Note:_ Every 10th timestep was saved as frame.
 - [X] `cd ptmp_link/Analysis/9J8M_R1`
-- [X] Cluster next (in ptmp_link/Analysis/9J8M_R1): `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_whole.xtc -o R1_cluster.xtc -pbc cluster -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_, _35_)
-- [X] Extact clustered frame 0 as reference: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_cluster.xtc -o R1_cluster_frame0.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_)
+- [X] Cluster next (in ptmp_link/Analysis/9J8M_R1): `echo 35 35 | gmx trjconv -s raven_md_9J8M_H2.tpr -f H2_whole.xtc -o H2_cluster.xtc -pbc cluster -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_, _35_)
+  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2
+- [X] Extract clustered frame 0 as reference: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_cluster.xtc -o R1_cluster_frame0.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_)
 - [X] Nojump on this frame 0 as reference: `gmx trjconv -s R1_cluster_frame0.pdb -f R1_cluster.xtc -o R1_nojump-full.xtc -pbc nojump 0 -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_)
 - [X] Subsample: `gmx trjconv -s R1_cluster_frame0.pdb -f R1_nojump_full.xtc -b 0 -e 1300100 -skip 50 -o R1_nojump_2600frames.xtc -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_)
 - [X] Center: `gmx trjconv -s R1_cluster_frame0.pdb -f R1_nojump_2600frames.xtc -o R1_final_centered_2600frames.xtc -center -pbc mol -ur compact -n ../expanded_9J8M_R-DNA-protein.ndx` (choose _35_, _35_)
