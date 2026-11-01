@@ -175,17 +175,17 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
   - [X] Choose _35_ for output.
 
 
+# Then move the large trajectories away to the archive
 
-## gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_mol-compact-1000-frames.xtc -o R1_frame_0ns.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx
-
-Then move the large trajectories away:
 - [X] Log from outside the clusters into a portal node (e.g. via Anaconda command line): `ssh -m hmac-sha2-256-etm@openssh.com <user>@gate.mpcdf.mpg.de`
 - [X] Log then further in, into an interactive node: `ssh <user>@raven03i.mpcdf.mpg.de`
 - [X] Type `screen`.
 - [X] Type `screen -ls` and look if you have an active screen.
 - [X] Make a link from the personal directory to the file storage (a**r**chive, named **r**): `ln -s /r/a/<user> r`
-- [X] Tar and copy the large files away to the archive (tar <destination-name> <source-name>): `tar cvzf "/r/a/<user>/"<some directory name.tar.gz>" "<some directory name as it exits now>"`
+- [X] Tar and copy the large files away to the archive (tar <destination-name> <source-name>): `tar cvzf "/r/a/<user>/9J8M/raven_md_9J8M_H3.xtc.tar.gz" "<some directory name as it exits now>"` (as it exists now: 2026_03-Ig-fold-M-high-mobility/9J8M_H3/raven_md_9J8M_H3.xtc"
 - [X] Alternatively: Use `tmux` and this makes it possible to disconnect while you are copying: `rsync -t --partial-dir=.rsync-partial --no-whole-file --info=progress2 "<some-file-as-it-exists>" "/r/a/<user>/<some-folder-where-it-has-to-go-to>"`
+  - _Note:_ Use `rsync -t --partial-dir=.rsync-partial --no-whole-file --info=progress2 "2026_03-Ig-fold-M-high-mobility/9J8M_Q3/raven_md_9J8M_Q3.xtc" "/r/a/<user>/9J8M/"`
+  - Done for: H3, H2, H(1), R(1), R2, R3, Q(1), Q2, Q3
 - [X] Check with: `dir /r/a/<user>` to see if present (or `df -h`)
 - [X] Log into a Raven session, remove the copied files: `rm -r <file-or-folder-you-copied>`
   - _Note:_ You cannot see the _/r_ directory link via a Raven session.      
