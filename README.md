@@ -140,18 +140,33 @@ We need to extract a subset of the full trajectory for analysis, then further up
 - [X] Make a new _Analysis_ folder in your master directory
 - [X] Copy the _.tpr_ file: `cp <source> <destination>` so: `cp ../9J8M_R/raven_md_9J8M_R.tpr R1/raven_md_9J8M_R1.tpr` 
 - [X] Make subfolders per replica in this master directory (we now name **R** => **R1**)
-- [X] Check the frames in all runs (541617 atoms):
-  - R1:
-  - R2:
-  - R3:
-  - Q1:
-  - Q2:
-  - Q3:
-  - H1:
-  - H2:
-  - H3:
-- [X] **Subsample** every 50th frame: `gmx trjconv -s raven_md_9J8M_Q3.tpr -f ../../9J8M_Q3/raven_md_9J8M_Q3.xtc -b 0 -e 1300100 -skip 50 -o 9J8M_Q3_nojump-2600-frames.xtc -pbc nojump -n ../expanded_9J8M_Q_DNA-protein.ndx`
-  - [X]  Choose _Group 35: system_with_LMNA_ (to extract all, but without water and ions due to size limit)
+- [X] TODO: whole → cluster → extract clustered frame 0 → nojump on the full trajectory → subsample → center once.
+
+Reference: https://manual.gromacs.org/current/user-guide/terminology.html#suggested-workflow, https://gromacs.bioexcel.eu/t/correcting-periodicity-in-gmx/165/3
+
+- [X] `module load gromacs/2025.2` 
+- [X] Make whole first (in ptmp_link/Analysis/9J8M_R1): `gmx trjconv -s ptmp_link/Analysis/9J8M_Q3/raven_md_9J8M_Q3.tpr -f 2026_03-Ig-fold-M-high-mobility/9J8M_Q3/raven_md_9J8M_Q3.xtc -o ptmp_link/Analysis/9J8M_Q3/Q3_whole.xtc -pbc whole -n ptmp_link/Analysis/expanded_9J8M_Q_DNA-protein.ndx` (choose _35_)
+  - :) Done: R1, R2, R3, H1, H2, Q1, Q2, Q3
+- [X] `cd ptmp_link/Analysis/9J8M_R1`
+- [X] Cluster next (in ptmp_link/Analysis/9J8M_R1): `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_whole.xtc -o R1_cluster.xtc -pbc cluster -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_, _35_)
+- [X] Extact clustered frame 0 as reference: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_cluster.xtc -o R1_cluster_frame0.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_)
+- [X] Nojump on this frame 0 as reference: `gmx trjconv -s R1_cluster_frame0.pdb -f R1_cluster.xtc -o R1_nojump-full.xtc -pbc nojump 0 -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_)
+- [X] Subsample: `gmx trjconv -s R1_cluster_frame0.pdb -f R1_nojump_full.xtc -b 0 -e 1300100 -skip 50 -o R1_nojump_2600frames.xtc -n ../expanded_9J8M_R_DNA-protein.ndx` (choose _35_)
+- [X] Center: `gmx trjconv -s R1_cluster_frame0.pdb -f R1_nojump_2600frames.xtc -o R1_final_centered_2600frames.xtc -center -pbc mol -ur compact -n ../expanded_9J8M_R-DNA-protein.ndx` (choose _35_, _35_)
+
+
+**Note: This order below did not work. Likely due to non-whole molecules in beginning.**
+- [X] **Subsample** every 50th frame: `gmx trjconv -s raven_md_9J8M_Q3.tpr -f ../../9J8M_Q3/raven_md_9J8M_Q3.xtc -b 0 -e 1300100 -skip 50 -o 9J8M_Q3_nojump-2600-frames.xtc -pbc nojump -n ../expanded_9J8M_Q_DNA-protein.ndx` 
+- [X] **Cluster** on all atoms, before "nojumping" again: `gmx trjconv -s raven_md_9J8M_Q1.tpr -f 9J8M_Q1_nojump-2600-frames.xtc -o Q1_clustered-2600-frames.xtc -pbc cluster -n ../expanded_9J8M_Q_DNA-protein.ndx`
+- [X] **Nojump** again: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_clustered-2600-frames.xtc -o R1_nojump-2600-frames-2.xtc -pbc nojump -n ../expanded_9J8M_R_DNA-protein.ndx`
+- [X] **Center** on the nojumped-cluster: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_nojump-2600-frames-2.xtc -o R1_center-2600-frames.xtc -center -n ../expanded_9J8M_R_DNA-protein.ndx`
+- [X] **Make all molecules compact**: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_center-2600-frames.xtc -o R1_mol-compact-2600-frames.xtc -pbc mol -ur compact -n ../expanded_9J8M_R_DNA-protein.ndx`
+- [X] **Dump the first frame to make movies in PyMol (see below):**  `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_mol-compact-2600-frames.xtc -o R1_frame_0ns.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx`
+  - [X] Choose _35_ for output.
+
+
+
+## gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_mol-compact-1000-frames.xtc -o R1_frame_0ns.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx
 
 Then move the large trajectories away:
 - [X] Log from outside the clusters into a portal node (e.g. via Anaconda command line): `ssh -m hmac-sha2-256-etm@openssh.com <user>@gate.mpcdf.mpg.de`
