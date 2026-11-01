@@ -380,8 +380,16 @@ To make movies from the trajectories, it is a bit tricky with complexes to have 
   - [X] Additionally, we want to download the first frame in PDB format (always choose _35_): `gmx trjconv -s ../raven_md_9J8M_R.tpr -f R_mol-compact-1000-frames.xtc -o R_frame_0ns.pdb -dump 0 -n ../../expanded_9J8M_R_DNA-protein.ndx`.
 
 **Then in PyMOL:**
-- [X] Open this last downloaded _R_frame_0ns.pdb_.
-- [X] Drag into the window the downloaded _R_mol-compact-1000-frames.xtc_.
-- [X] If you like center on a specific chain **and make sure to turn boundary conditions off** with `pbc=0`: `intra_fit R_frame_0ns.pdb and chain M, pbc=0`.
-- [X] Set the movie (for 1000 frames): `mset 1-1000`
-- [x] Produce the movie `movie.produce R_movie.mp4, quality=90`.   
+- [X] Open this last downloaded _R1_cluster_frame0.pdb_.
+- [X] Drag into the window the downloaded _R_final_centered-2600-frames.xtc_.
+- [x] `hide everything`
+- [X] `color gray70, polymer`
+- [X] `show ribbon, polymer`
+- [X] `color sand, chain K+L`
+- [X] `color teal, chain M`
+- [X] `set stick_radius, 0.6`
+- [X] `show sticks, chain M and resi 545+482`
+- [X] `sele two, chain M and resi 545` (or 482) then color        
+- [ ] If you like center on a specific chain **and make sure to turn boundary conditions off** with `pbc=0`: `intra_fit R_frame_0ns.pdb and chain M, pbc=0`.
+- [X] Set the movie (for 2600 frames): `mset 1-2600`
+- [x] Produce the movie `movie.produce R1_movie.mp4, quality=400`.   
