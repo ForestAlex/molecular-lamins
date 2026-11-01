@@ -35,7 +35,13 @@ We use GROMACS 2025.2 with the CHARMM force field.
 
 ### Pre-equilibrations
 
-- [X] 1. Convert the PDB files into GRO files: `gmx pdb2gmx -f "data/7Z21-WT-without-waters.pdb" -o "gro/R.gro" -ignh -missing`  
+- [X] 1. Convert the PDB files into GRO files: `gmx pdb2gmx -f "data/7Z21-WT-without-waters.pdb" -o "gro/R.gro" -ignh -missing`
+- [X] _Note:_ If someone is working with DNA + GROMACS + you add CHARMM36, pdb2gmx cost me a few hours in finding the correct conversions. Perhaps someone needs it too:
+    * exchange in your .pdb all OP1 to O1P
+    * exchange in your .pdb all OP2 to O2P
+    * exchange all C7 for thymines: search in your .pdb C7   DT and exchange all C5M   DT
+    * if there is a phosphate, run pdb2gmx with -ter and choose option 6: 5PHO for you 5' termini
+    * stick with option 6 as 3TER for your 3' termini 
   - [X] Hopefully you did Note (1) above, then choose _1: From current directory: CHARMM all-atom force field_ otherwise choose the force field to your liking.
   - [X] Choose _1: TIP3P_ as water model.
   - Note: We require the flags `-ignh` and `-missing` to build the correct hydrogen topology and protonation for pH = 7 and complete side chains with missing atoms respective for the force field.
