@@ -48,8 +48,8 @@ We use GROMACS 2025.2 with the CHARMM force field.
     * exchange in your .pdb all OP2 to O2P
     * exchange all C7 for thymines: search in your .pdb C7   DT and exchange all C5M  DT
     - [X] DONE :) For the _R/H/Q-H2AX-tails-O1P.pdb_ repeats.
-    * if there is a phosphate, run pdb2gmx with `-ter` and choose option 6: 5PHO for you 5' termini
-    * stick with option 6 as 3TER for your 3' termini 
+    * if there is a phosphate, run pdb2gmx with `-ter` and choose option 6: 5PHO for you 5' termini, stick with option 6 as 3TER for your 3' termini 
+     * H2AX :) `gmx pdb2gmx -f "data/H-H2AX-tails-O1P.pdb" -o "gro/H2AX_H.gro" -ignh -missing -ter`
   - [X] Hopefully you did Note (1) above, then choose _1: From current directory: CHARMM all-atom force field_ otherwise choose the force field to your liking.
   - [X] Choose _1: TIP3P_ as water model.
   - [X] This run generates a .gro and many .top (topology files). Make a subfolder **H**, **R**, **Q**, **7Z21_R** in the _top_ folder. Copy the topology files respectively to the mutation folder.
@@ -62,17 +62,22 @@ We use GROMACS 2025.2 with the CHARMM force field.
 - [X] 2. Put into box: `gmx editconf -f "gro/R.gro" -o "box/R.gro" -c -d 1.2 -bt dodecahedron`
   - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**). No .top files will be generated here.
   - Optional: DOWNLOAD ALL THE .GRO FILES AND CHECK.
+  * H2AX :) `gmx editconf -f "gro/H2AX_R.gro" -o "box/H2AX_R.gro" -c -d 1.2 -bt dodecahedron`
 - [X] 3. Add waters with the spc216.gro standard water model (incl. in GROMACS): `gmx solvate -cp "box/R.gro" -cs spc216.gro -o "solv/R.gro" -p "top/R/topol.top"`
   - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**). New .top files will be generated in the respective folders (the old ones marked with hashtags ###.)
   - Optional: DOWNLOAD ALL THE .GRO FILES AND CHECK.
+  * H2AX :) `gmx solvate -cp "box/H2AX_R.gro" -cs spc216.gro -o "solv/H2AX_R.gro" -p "top/R/topol.top"`
 - [X] 4a. Add the file  _ions.mdp_ file in the `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
 - [X] 4b. Add now small run with this unique _ions.mdp_ file: `gmx grompp -f ions.mdp -c "solv/R.gro" -p "top/R/topol.top" -o "ions/R.tpr" -maxwarn 1`
+  - In the _.top_ files (_/top/R/topol.top_) change the directory link of _#include "./charmm36-feb2026_ljpme_cgenff-5.0.ff/tip3p.itp"_ to _#include "../../charmm36-feb2026_ljpme_cgenff-5.0.ff/forcefield.itp"_ **3x** (This appears for the forcefield parameters **1x** line, as second line for the water model **2x**, and as third line for the ion types **3x**.) 
   - Docs: R (LD random seed to 927660767), Q (LD random seed to 429910271), H (LD random seed to -109202057), 7Z21_R (LD random seed to -33637261)
   - Note: The `-maxwarn 2` option verifies that the system is large, and that we will later add charges.
-  - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**). 
+  - [X] In total, this has to be repeated 4x times (for **H**, **R**, **Q**, **7Z21_R**).
+   * H2AX :) `gmx grompp -f ions.mdp -c "solv/H2AX_R.gro" -p "top/R/topol.top" -o "ions/H2AX_R.tpr" -maxwarn 1` (Random seed: R = -4489602, Q = -1077969165, H = -203431937)
 - [X] 5. Add now the ions (we use potassium and chloride as these are most prevalent in the nuclear environment): `gmx genion -s "ions/R.tpr" -o "solv/ions_R.gro" -p "top/R/topol.top" -pname K -nname CL -conc 0.1 -neutral`
   - Choose _13: SOL_ to replace solvent molecules with ions (otherwise you would replace your protein atoms).
   - [X] In total, this has to be repeated 4x times (for **ions_H**, **ions_R**, **ions_Q**, **ions_7Z21_R**).
+  - * H2AX :) `gmx genion -s "ions/H2AX_R.tpr" -o "solv/H2AX_R.gro" -p "top/R/topol.top" -pname K -nname CL -conc 0.1 -neutral` (Choose _14: SOL_ due to DNA present)
   - DOWNLOAD ALL THE IONS_X.GRO FILES AND CHECK IF THE CORRECT MUTATIONS IN THE CORRECT PLACES ARE THERE.
 
 ### Energy Minimization (EM) equilibration
@@ -83,8 +88,10 @@ We use GROMACS 2025.2 with the CHARMM force field.
 
 - [X] Go to the folder with the respective name, e.g. _R_. (We created it at the beginning, it should be empty.)
 - [X] Prepare run `gmx grompp -f "../minim.mdp" -c "../solv/ions_R.gro" -p "../top/R/topol.top" -o "em_R.tpr" -maxwarn 2`
+   * H2AX :) `gmx grompp -f "../minim.mdp" -c "../solv/H2AX_R.gro" -p "../top/R/topol.top" -o "em_R.tpr" -maxwarn 2` (R: -1635794953, Q: -553705481, H: 444448455)
 - [X] Run `mpirun gmx_mpi mdrun -s "em_R.tpr" -deffnm "em_R" -ntomp 12`
   - R (-145229826), R2 (-1318948), R3 (-137634571), Q (-1196073), Q2 (-278663313), Q3 (1470487909), H (-1714243), H2 (-1376784753), H3 (-295772933), 7Z21_R (-1411653833), 7Z21_R2 (-87425033), 7Z21_R3 (-67474433)
+  * H2AX :) `mpirun gmx_mpi mdrun -s "em_R.tpr" -deffnm "em_R" -ntomp 12` (R: -1635794953, Q: -1073794243, H: 444448455)
   - `cd 2026_09-Ig-fold-7Z21/R2` ... change to next directory and repeat independent equilibrations.
   - RENAME IF REPLICA: `gmx grompp -f "../minim.mdp" -c "../solv/ions_R.gro" -p "../top/R/topol.top" -o "em_R`**2**`.tpr" -maxwarn 2`
   - 
@@ -97,7 +104,8 @@ We use GROMACS 2025.2 with the CHARMM force field.
 **Repeat this for 3 x 7Z21_R (parallelize in different consoles)**
 
 - [X] FOR ALL: Run `gmx energy -f em_R.edr -o "potential_em_R.xvg"` (choose _11: Potential_)
-- [X] FOR ALL: Check convergence with the plotting modality (see Jupyter notebook attached). 
+- [X] FOR ALL: Check convergence with the plotting modality (see Jupyter notebook attached).
+   * `file = f"{protein}/em/potential_em_{protein}.xvg"` and `x,y = np.loadtxt(file,comments=("@", "#"),unpack=True)` and `plt.plot(x,y, color="lightblue", linestyle='-')`
 
 
 ### NVT equilibrations (100 ps)
