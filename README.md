@@ -187,7 +187,8 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
   - _Note:_ Do **not** use `-pbc mol` or a _.tpr_ file because these will put the center of a molecule somewhere for centering, and will destroy all the "putting into the box and aligning" steps done before above.
   - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2
   - WORKS :))
-     
+
+- [X] Copy back the _H2_nojump-2600-frames.xtc_ to the Analysis storage folder: Go to _Analysis/9J8M_H1_ and `cp ../../../ptmp_link/Analysis/9J8M_H1/H1_final_centered-2600-frames.xtc .` (repeat for the others)
 - [X] Move the original _.xtc_ to the archive.
 
 
@@ -216,7 +217,11 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
 - [X] Log into a Raven session, remove the copied files: `rm -r <file-or-folder-you-copied>`
   - _Note:_ You cannot see the _/r_ directory link via a Raven session.      
 
-### Clustering
+# Clustering for 2600 frames
+
+- [X] Cluster the _Analysis_ folder trajectories **at cutoff 0.2** for the C$\alpha$ and DNA backbone atoms. TODO :)
+
+### Old Clustering
 
 - [X] `cd 2026_03-Ig-fold-M-high-mobility/analysis/9J8M_R`
 - [X] Open directory for output files: `mkdir cluster-lamin-0.2` 
@@ -343,7 +348,9 @@ We analyze the distance and the SASA between lamin A and the BAF dimer.
      
 - [X] Calculate minimum distance:
   - [X] Between left Thr12 and lamin A: `gmx mindist -f "R3_centered-1000-frames.xtc" -s "raven_md_7Z21_R3.tpr" -n "expanded_7Z21_R.ndx" -on dist/num_contacts_R3-left.xvg -od dist/mindist_R3-left.xvg -d 0.45` # not necessary: -or dist/mindist_res_R-left.xvg
-  - [X] Choose _group 22_ and _group 25_
+    * :) For 9J8M **2600**: `cd Analysis/9J8M_H1` and `mkdir dist-BAF` and `gmx mindist -f "H1_final_centered-2600-frames.xtc" -s "raven_md_9J8M_H1.tpr" -n "../expanded_9J8M_H_DNA-protein.ndx" -on dist-BAF/num_contacts_H1-left.xvg -od dist-BAF/mindist_H1-left.xvg -d 0.45` TODO
+    * :) For 9J8M **2600**: `mkdir dist-545-DNA` and `echo 39 12 | gmx mindist -f "H1_final_centered-2600-frames.xtc" -s "raven_md_9J8M_H1.tpr" -n "../expanded_9J8M_H_DNA-protein.ndx" -on dist-545-DNA/num_contacts_H1.xvg -od dist-545-DNA/mindist_H1.xvg -d 0.45` 
+  -[X] Choose _group 22_ and _group 25_
   - [X] Between right Thr12 and lamin A: `gmx mindist -f "R3_centered-1000-frames.xtc" -s "raven_md_7Z21_R3.tpr" -n "expanded_7Z21_R.ndx" -on dist/num_contacts_R3-right.xvg -od dist/mindist_R3-right.xvg -d 0.45` # not necessary: -or dist/mindist_res_R-right.xvg 
   - [X] Choose _group 22_ and _group 26_
         
