@@ -106,12 +106,15 @@ We use GROMACS 2025.2 with the CHARMM force field.
 - [X] FOR ALL: Run `gmx energy -f em_R.edr -o "potential_em_R.xvg"` (choose _11: Potential_)
 - [X] FOR ALL: Check convergence with the plotting modality (see Jupyter notebook attached).
    * `file = f"{protein}/em/potential_em_{protein}.xvg"` and `x,y = np.loadtxt(file,comments=("@", "#"),unpack=True)` and `plt.plot(x,y, color="lightblue", linestyle='-')`
+   * :) H2AX done (use `plt.ylim(-15000000, 30000000)`, much higher start $10^{12}$)
 
 
 ### NVT equilibrations (100 ps)
 
 - [X] Upload the _nvt.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.) 
 - [X] Prepare run for all replicas: `gmx grompp -f "../nvt.mdp" -c "em/em_R.gro" -r "em/em_R.gro" -p "../top/R/topol.top" -o "nvt_R.tpr"`
+  * H2AX :) `gmx grompp -f "../nvt.mdp" -c "em/em_R.gro" -r "em/em_R.gro" -p "../top/R/topol.top" -o "nvt_R.tpr"` (R: -33573893, Q: -805572953, H: 1977319413)
+  * H2AX :) `mpirun gmx_mpi mdrun -s "nvt_R.tpr" -deffnm "nvt_R" -ntomp 12`
 - [X] Run all replicas: `mpirun gmx_mpi mdrun -s "nvt_7Z21_R.tpr" -deffnm "nvt_7Z21_R" -ntomp 12`
 - Note: The process is similar to the above.
 - Note: Make another subfolder _nvt_ in the e.g. _R_ and move the respective files there (to clean up your brain).
@@ -122,6 +125,8 @@ We use GROMACS 2025.2 with the CHARMM force field.
 
 - [X] Upload the _npt.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
 - [X] Prepare run for all replicas: `gmx grompp -f "../npt.mdp" -c "nvt/nvt_R.gro" -r "nvt/nvt_R.gro" -p "../top/R/topol.top" -o "npt_R.tpr" `
+   * H2AX :) `gmx grompp -f "../npt.mdp" -c "nvt/nvt_R.gro" -r "nvt/nvt_R.gro" -p "../top/R/topol.top" -o "npt_R.tpr" ` (R: -539771395, Q: -1426856201, H: -404768773)
+   * H2AX :) `mpirun gmx_mpi mdrun -s "npt_R.tpr" -deffnm "npt_R" -ntomp 12`
 - [X] Run all replicas: `mpirun gmx_mpi mdrun -s "npt_R.tpr" -deffnm "npt_R" -ntomp 12`
 - Note: The process is similar to the above.
 - Note: Make another subfolder _npt_ in the e.g. _R_ and move the respective files there (to clean up your brain).
