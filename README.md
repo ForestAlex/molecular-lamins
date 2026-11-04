@@ -215,7 +215,27 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
   - Done for: H3, H2, H(1), R(1), R2, R3, Q(1), Q2, Q3
 - [X] Check with: `dir /r/a/<user>` to see if present (or `df -h`)
 - [X] Log into a Raven session, remove the copied files: `rm -r <file-or-folder-you-copied>`
-  - _Note:_ You cannot see the _/r_ directory link via a Raven session.      
+  - _Note:_ You cannot see the _/r_ directory link via a Raven session.
+     
+- [X] If you want to move them back do the following:
+   - [X] Log into the interactive node (e.g. _raven03_ via _raven03i_) exactly as above.
+   - [X] Test with the `ghi_ls` command whether your file is staged.
+   - [X] Run the reverse on the copying: `rsync -t --partial-dir=.rsync-partial --no-whole-file --info=progress2 "/r/a/<user>/9J8M/raven_md_9J8M_H3.xtc"  "2026_03-Ig-fold-M-high-mobility/9J8M_H3/"`
+-----------
+Data on the archive file system /r is on tapes. To copy these files, they need to be staged to disk cache first. It takes some time. rsync triggers this staging. The process may appear hanging, but it just waits for data to become available. After the staging is done, the file is transferred. I see, the file /r/a/<user>/9J8M/raven_md_9J8M_Q3.xtc was staged actually. If you try rsync again, it should work.
+
+You can check if your file is on tape or on disk with the command ghi_ls on raven, for a file or a directory:
+
+raven01:~ # ghi_ls -l /ghi/r/a/<user>/9J8M/raven_md_9J8M_H3.xtc
+B  -rw-r--r--   1  40114     14500     269548406644 Aug 12 09:21 /ghi/r/a/awaldherr/9J8M/raven_md_9J8M_H3.xtc
+
+'B' means both on tape and on disk
+'H' means only on tape
+'G' means only on disk
+
+It may be useful to prestage data first, then issue rsync. To prestage, use `ghi_stage` on raven. `ghi_stage` sorts files according to their position on tapes and stages data efficiently: `ghi_stage /ghi/r/a/<user>/9J8M/raven_md_9J8M_H3.xtc`
+
+-----------
 
 # Clustering for 2600 frames
 
