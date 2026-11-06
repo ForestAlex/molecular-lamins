@@ -172,7 +172,7 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
 
 - [X] `module load gromacs/2025.2` 
 - [X] Make whole first (in ptmp_link/Analysis/9J8M_R1): `gmx trjconv -s ptmp_link/Analysis/9J8M_Q3/raven_md_9J8M_Q3.tpr -f 2026_03-Ig-fold-M-high-mobility/9J8M_Q3/raven_md_9J8M_Q3.xtc -o ptmp_link/Analysis/9J8M_Q3/Q3_whole.xtc -pbc whole -n ptmp_link/Analysis/expanded_9J8M_Q_DNA-protein.ndx` (choose _35_)
-  - :) Done: R1 (135988 frames), R2 (131973 frames), R3 (132040 frames), H1 (130658 frames), H2 (131790 frames), Q1 (132554 frames), Q2 (131694 frames), Q3 (131872 frames) **ca. 45-55 min.**
+  - :) Done: R1 (135988 frames), R2 (131973 frames), R3 (132040 frames), H1 (130658 frames), H2 (131790 frames), H3 ( frames), Q1 (132554 frames), Q2 (131694 frames), Q3 (131872 frames) **ca. 45-55 min.**
   - _Note:_ Every 10th timestep was saved as frame.
 - [X] `cd ptmp_link/Analysis/9J8M_R1`
 - [X] Cluster next (in ptmp_link/Analysis/9J8M_R1): `echo 35 35 | gmx trjconv -s raven_md_9J8M_H2.tpr -f H2_whole.xtc -o H2_cluster.xtc -pbc cluster -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_, _35_)
@@ -187,19 +187,16 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
   - _Note:_ Do **not** use `-pbc mol` or a _.tpr_ file because these will put the center of a molecule somewhere for centering, and will destroy all the "putting into the box and aligning" steps done before above.
   - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2
   - WORKS :))
+  - [X] **Dump the first frame to make movies:** `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_final_centered-2600-frames.xtc -o R1_frame_0ns.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx`
+   - [X] Choose _35_ for output.
+  - [X] **Dump the last frame:** `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_final_centered-2600-frames.xtc -o R1_frame_0ns.pdb -dump 150000000 -n ../expanded_9J8M_R_DNA-protein.ndx`
+   - [X] Choose _35_ for output.
+   - _Note:_ The large number at -dump automatically picks only the last frame: _Dumping frame at t= 1.3e+06 ps_
+
 
 - [X] Copy back the _H2_nojump-2600-frames.xtc_ to the Analysis storage folder: Go to _Analysis/9J8M_H1_ and `cp ../../../ptmp_link/Analysis/9J8M_H1/H1_final_centered-2600-frames.xtc .` (repeat for the others)
 - [X] Move the original _.xtc_ to the archive.
 
-
-**Note: This order below did not work. Likely due to non-whole molecules in beginning.**
-- [X] **Subsample** every 50th frame: `gmx trjconv -s raven_md_9J8M_Q3.tpr -f ../../9J8M_Q3/raven_md_9J8M_Q3.xtc -b 0 -e 1300100 -skip 50 -o 9J8M_Q3_nojump-2600-frames.xtc -pbc nojump -n ../expanded_9J8M_Q_DNA-protein.ndx` 
-- [X] **Cluster** on all atoms, before "nojumping" again: `gmx trjconv -s raven_md_9J8M_Q1.tpr -f 9J8M_Q1_nojump-2600-frames.xtc -o Q1_clustered-2600-frames.xtc -pbc cluster -n ../expanded_9J8M_Q_DNA-protein.ndx`
-- [X] **Nojump** again: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_clustered-2600-frames.xtc -o R1_nojump-2600-frames-2.xtc -pbc nojump -n ../expanded_9J8M_R_DNA-protein.ndx`
-- [X] **Center** on the nojumped-cluster: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_nojump-2600-frames-2.xtc -o R1_center-2600-frames.xtc -center -n ../expanded_9J8M_R_DNA-protein.ndx`
-- [X] **Make all molecules compact**: `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_center-2600-frames.xtc -o R1_mol-compact-2600-frames.xtc -pbc mol -ur compact -n ../expanded_9J8M_R_DNA-protein.ndx`
-- [X] **Dump the first frame to make movies in PyMol (see below):**  `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_mol-compact-2600-frames.xtc -o R1_frame_0ns.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx`
-  - [X] Choose _35_ for output.
 
 
 # Then move the large trajectories away to the archive
@@ -221,6 +218,7 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
    - [X] Log into the interactive node (e.g. _raven03_ via _raven03i_) exactly as above.
    - [X] Test with the `ghi_ls` command whether your file is staged.
    - [X] Run the reverse on the copying: `rsync -t --partial-dir=.rsync-partial --no-whole-file --info=progress2 "/r/a/<user>/9J8M/raven_md_9J8M_H3.xtc"  "2026_03-Ig-fold-M-high-mobility/9J8M_H3/"`
+   - [X] To find a file in a directory or subdirectory run: `find -name raven_md_9J8M_H3.xtc` 
 -----------
 Data on the archive file system /r is on tapes. To copy these files, they need to be staged to disk cache first. It takes some time. rsync triggers this staging. The process may appear hanging, but it just waits for data to become available. After the staging is done, the file is transferred. I see, the file /r/a/<user>/9J8M/raven_md_9J8M_Q3.xtc was staged actually. If you try rsync again, it should work.
 
@@ -240,6 +238,7 @@ It may be useful to prestage data first, then issue rsync. To prestage, use `ghi
 # Clustering for 2600 frames
 
 - [X] Cluster the _Analysis_ folder trajectories **at cutoff 0.2** for the C$\alpha$ and DNA backbone atoms. TODO :)
+- [X]  
 
 ### Old Clustering
 
