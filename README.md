@@ -140,6 +140,7 @@ We use GROMACS 2025.2 with the CHARMM force field.
 - [X] Upload the md.mdp_ file `2026_09-Ig-fold-7Z21` master directory. (See this GitHub repository for file.)
 - [X] Prepare run for all replicas: `gmx grompp -f "../md.mdp" -c "npt/npt_R.gro" -p "../top/R/topol.top" -t "npt/npt_R.cpt" -o "production_md_R.tpr"`
 - [X] This is the run command you will need:  `mpirun gmx_mpi mdrun -s "production_md_R.tpr" -deffnm "production_md_R" -ntomp 12`
+   * H2AX :) `gmx grompp -f "../md.mdp" -c "npt/npt_R.gro" -p "../top/R/topol.top" -t "npt/npt_R.cpt" -o "raven_H2AX_R.tpr"` H1 (-1082171471), Q1 (2145220075), R1 (-4196920)
 
 
 # ANALYZING MD: Clustering and extracting subsets (now we switch to the large 9J8M runs)
@@ -176,20 +177,20 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
   - _Note:_ Every 10th timestep was saved as frame.
 - [X] `cd ptmp_link/Analysis/9J8M_R1`
 - [X] Cluster next (in ptmp_link/Analysis/9J8M_R1): `echo 35 35 | gmx trjconv -s raven_md_9J8M_H2.tpr -f H2_whole.xtc -o H2_cluster.xtc -pbc cluster -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_, _35_)
-  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2 **ca. 25 min.**
+  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2, H3 **ca. 25 min.**
 - [X] Extract clustered frame 0 as reference: `echo 35 | gmx trjconv -s raven_md_9J8M_H2.tpr -f H2_cluster.xtc -o H2_cluster_frame0.pdb -dump 0 -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_)
-  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2
+  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2, H3
 - [X] Nojump on this frame 0 as reference: `echo 35 | gmx trjconv -s H2_cluster_frame0.pdb -f H2_cluster.xtc -o H2_nojump-full.xtc -pbc nojump -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_)
-  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2
+  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2, H3
 - [X] Subsample: `echo 35 | gmx trjconv -s H2_cluster_frame0.pdb -f H2_nojump-full.xtc -b 0 -e 1300100 -skip 50 -o H2_nojump-2600-frames.xtc -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_)
-  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2
+  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2, H3
 - [X] Center: `echo 35 35 | gmx trjconv -s H2_cluster_frame0.pdb -f H2_nojump-2600-frames.xtc -o H2_final_centered-2600-frames.xtc -center -ur compact -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_, _35_)
   - _Note:_ Do **not** use `-pbc mol` or a _.tpr_ file because these will put the center of a molecule somewhere for centering, and will destroy all the "putting into the box and aligning" steps done before above.
-  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2
+  - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2, H3
   - WORKS :))
-  - [X] **Dump the first frame to make movies:** `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_final_centered-2600-frames.xtc -o R1_frame_0ns.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx`
+  - [X] **Dump the first frame to make movies:** `echo 35 | gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_final_centered-2600-frames.xtc -o R1_first-frame.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx`
    - [X] Choose _35_ for output.
-  - [X] **Dump the last frame:** `gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_final_centered-2600-frames.xtc -o R1_frame_0ns.pdb -dump 150000000 -n ../expanded_9J8M_R_DNA-protein.ndx`
+  - [X] **Dump the last frame:** `echo 35 | gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_final_centered-2600-frames.xtc -o R1_final-frame.pdb -dump 150000000 -n ../expanded_9J8M_R_DNA-protein.ndx`
    - [X] Choose _35_ for output.
    - _Note:_ The large number at -dump automatically picks only the last frame: _Dumping frame at t= 1.3e+06 ps_
 
@@ -236,27 +237,28 @@ It may be useful to prestage data first, then issue rsync. To prestage, use `ghi
 -----------
 
 ## For every analysis
-- [X] make new directory within the subfolder `rmdir {9J8M_R1,9J8M_R2,9J8M_R3,9J8M_H1,9J8M_H2,9J8M_H3,9J8M_Q1,9J8M_Q2,9J8M_Q3}/{cluster-0.2}`
+- [X] make new directory within the subfolder `mkdir {9J8M_R1,9J8M_R2,9J8M_R3,9J8M_H1,9J8M_H2,9J8M_H3,9J8M_Q1,9J8M_Q2,9J8M_Q3}/{cluster-0.2-lamin,cluster-0.2}`
+- [X] remove if some issue `rmdir {9J8M_R1,9J8M_R2,9J8M_R3,9J8M_H1,9J8M_H2,9J8M_H3,9J8M_Q1,9J8M_Q2,9J8M_Q3}/cluster-0.2`
 
 
 ### Clustering for 2600 frames
 
-- [X] Cluster the _Analysis_ folder trajectories **at cutoff 0.4** for the C$\alpha$ and DNA backbone atoms: `gmx cluster -f H1_final_centered-2600-frames.xtc -s raven_md_9J8M_H1.tpr -n ../expanded_9J8M_H_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-0.2/rmsd-raw.xpm -o cluster-0.2/rmsd-clust.xpm -g cluster-0.2/cluster.log -dist cluster-0.2/rmsd-dist.xvg -conv cluster-0.2/mc-conv.xvg -sz cluster-0.2/clustsize.xvg -tr cluster-0.2/clustertrans.xpm -ntr cluster-0.2/clustertrans.xvg -clid cluster-0.2/clusterid.xvg -cl cluster-0.2/clusters.pdb -clndx cluster-0.2/clindex.ndx`
+- [X] Cluster the _Analysis_ folder trajectories **at cutoff 0.4** for the C$\alpha$ and DNA backbone atoms: `echo 47 35 | gmx cluster -f H1_final_centered-2600-frames.xtc -s raven_md_9J8M_H1.tpr -n ../expanded_9J8M_H_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-0.2/rmsd-raw.xpm -o cluster-0.2/rmsd-clust.xpm -g cluster-0.2/cluster.log -dist cluster-0.2/rmsd-dist.xvg -conv cluster-0.2/mc-conv.xvg -sz cluster-0.2/clustsize.xvg -tr cluster-0.2/clustertrans.xpm -ntr cluster-0.2/clustertrans.xvg -clid cluster-0.2/clusterid.xvg -cl cluster-0.2/clusters.pdb -clndx cluster-0.2/clindex.ndx`
    - [X] Choose _Group 47 (DNAC3+proteinCA) has  1415 elements_ (for clustering)
    - [X] Choose _Group 35 (system-with-lmna) has 28578 elements_ (for output)
    - [X] _Note:_ These produce too many clusters (in general: one majority difference, and one shoulder at 0.6).
-- [X] Cluster the extracted 2600 frames per 3x3 replicas **at cutoff 0.2 on C$\alpha$ of only lamin A**: `gmx cluster -f R3_final_centered-2600-frames.xtc -s raven_md_9J8M_R3.tpr -n ../expanded_9J8M_R_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-lamin-0.2/rmsd-raw.xpm -o cluster-lamin-0.2/rmsd-clust.xpm -g cluster-lamin-0.2/cluster.log -dist cluster-lamin-0.2/rmsd-dist.xvg -conv cluster-lamin-0.2/mc-conv.xvg -sz cluster-lamin-0.2/clustsize.xvg -tr cluster-lamin-0.2/clustertrans.xpm -ntr cluster-lamin-0.2/clustertrans.xvg -clid cluster-lamin-0.2/clusterid.xvg -cl cluster-lamin-0.2/clusters.pdb -clndx cluster-lamin-0.2/clindex.ndx`
+- [X] Cluster the extracted 2600 frames per 3x3 replicas **at cutoff 0.2 on C$\alpha$ of only lamin A**: `echo 36 35 | gmx cluster -f R1_final_centered-2600-frames.xtc -s raven_md_9J8M_R1.tpr -n ../expanded_9J8M_R_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-0.2-lamin/rmsd-raw.xpm -o cluster-0.2-lamin/rmsd-clust.xpm -g cluster-0.2-lamin/cluster.log -dist cluster-0.2-lamin/rmsd-dist.xvg -conv cluster-0.2-lamin/mc-conv.xvg -sz cluster-0.2-lamin/clustsize.xvg -tr cluster-0.2-lamin/clustertrans.xpm -ntr cluster-0.2-lamin/clustertrans.xvg -clid cluster-0.2-lamin/clusterid.xvg -cl cluster-0.2-lamin/clusters.pdb -clndx cluster-0.2-lamin/clindex.ndx`
    - [X] Choose _Group 36 ( LMNA_&_C-alpha) has 119 elements_ (for clustering)
    - [X] Choose _Group 35 (system-with-lmna) has 28578 elements_ (for output)
       * R1
       * R2: 7 clusters
       * R3
-      * H1
-      * H2
-      * H3
-      * Q1
-      * Q2
-      * Q3
+      * H1: 6 clusters
+      * H2: 17 clusters
+      * H3: 2 clusters
+      * Q1: 3 clusters
+      * Q2: 1 cluster
+      * Q3: 3 clusters
 
 ### Old Clustering
 
