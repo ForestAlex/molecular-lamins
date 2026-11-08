@@ -172,7 +172,7 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
 
 - [X] `module load gromacs/2025.2` 
 - [X] Make whole first (in ptmp_link/Analysis/9J8M_R1): `gmx trjconv -s ptmp_link/Analysis/9J8M_Q3/raven_md_9J8M_Q3.tpr -f 2026_03-Ig-fold-M-high-mobility/9J8M_Q3/raven_md_9J8M_Q3.xtc -o ptmp_link/Analysis/9J8M_Q3/Q3_whole.xtc -pbc whole -n ptmp_link/Analysis/expanded_9J8M_Q_DNA-protein.ndx` (choose _35_)
-  - :) Done: R1 (135988 frames), R2 (131973 frames), R3 (132040 frames), H1 (130658 frames), H2 (131790 frames), H3 ( frames), Q1 (132554 frames), Q2 (131694 frames), Q3 (131872 frames) **ca. 45-55 min.**
+  - :) Done: R1 (135988 frames), R2 (131973 frames), R3 (132040 frames), H1 (130658 frames), H2 (131790 frames), H3 (131534 frames), Q1 (132554 frames), Q2 (131694 frames), Q3 (131872 frames) **ca. 45-55 min.**
   - _Note:_ Every 10th timestep was saved as frame.
 - [X] `cd ptmp_link/Analysis/9J8M_R1`
 - [X] Cluster next (in ptmp_link/Analysis/9J8M_R1): `echo 35 35 | gmx trjconv -s raven_md_9J8M_H2.tpr -f H2_whole.xtc -o H2_cluster.xtc -pbc cluster -n ../expanded_9J8M_H_DNA-protein.ndx` (choose _35_, _35_)
