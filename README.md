@@ -225,7 +225,7 @@ Data on the archive file system /r is on tapes. To copy these files, they need t
 You can check if your file is on tape or on disk with the command ghi_ls on raven, for a file or a directory:
 
 raven01:~ # ghi_ls -l /ghi/r/a/<user>/9J8M/raven_md_9J8M_H3.xtc
-B  -rw-r--r--   1  40114     14500     269548406644 Aug 12 09:21 /ghi/r/a/awaldherr/9J8M/raven_md_9J8M_H3.xtc
+B  -rw-r--r--   1  40114     14500     269548406644 Aug 12 09:21 /ghi/r/a/<user>/9J8M/raven_md_9J8M_H3.xtc
 
 'B' means both on tape and on disk
 'H' means only on tape
@@ -235,10 +235,28 @@ It may be useful to prestage data first, then issue rsync. To prestage, use `ghi
 
 -----------
 
-# Clustering for 2600 frames
+## For every analysis
+- [X] make new directory within the subfolder `rmdir {9J8M_R1,9J8M_R2,9J8M_R3,9J8M_H1,9J8M_H2,9J8M_H3,9J8M_Q1,9J8M_Q2,9J8M_Q3}/{cluster-0.2}`
 
-- [X] Cluster the _Analysis_ folder trajectories **at cutoff 0.2** for the C$\alpha$ and DNA backbone atoms. TODO :)
-- [X]  
+
+### Clustering for 2600 frames
+
+- [X] Cluster the _Analysis_ folder trajectories **at cutoff 0.4** for the C$\alpha$ and DNA backbone atoms: `gmx cluster -f H1_final_centered-2600-frames.xtc -s raven_md_9J8M_H1.tpr -n ../expanded_9J8M_H_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-0.2/rmsd-raw.xpm -o cluster-0.2/rmsd-clust.xpm -g cluster-0.2/cluster.log -dist cluster-0.2/rmsd-dist.xvg -conv cluster-0.2/mc-conv.xvg -sz cluster-0.2/clustsize.xvg -tr cluster-0.2/clustertrans.xpm -ntr cluster-0.2/clustertrans.xvg -clid cluster-0.2/clusterid.xvg -cl cluster-0.2/clusters.pdb -clndx cluster-0.2/clindex.ndx`
+   - [X] Choose _Group 47 (DNAC3+proteinCA) has  1415 elements_ (for clustering)
+   - [X] Choose _Group 35 (system-with-lmna) has 28578 elements_ (for output)
+   - [X] _Note:_ These produce too many clusters (in general: one majority difference, and one shoulder at 0.6).
+- [X] Cluster the extracted 2600 frames per 3x3 replicas **at cutoff 0.2 on C$\alpha$ of only lamin A**: `gmx cluster -f R3_final_centered-2600-frames.xtc -s raven_md_9J8M_R3.tpr -n ../expanded_9J8M_R_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-lamin-0.2/rmsd-raw.xpm -o cluster-lamin-0.2/rmsd-clust.xpm -g cluster-lamin-0.2/cluster.log -dist cluster-lamin-0.2/rmsd-dist.xvg -conv cluster-lamin-0.2/mc-conv.xvg -sz cluster-lamin-0.2/clustsize.xvg -tr cluster-lamin-0.2/clustertrans.xpm -ntr cluster-lamin-0.2/clustertrans.xvg -clid cluster-lamin-0.2/clusterid.xvg -cl cluster-lamin-0.2/clusters.pdb -clndx cluster-lamin-0.2/clindex.ndx`
+   - [X] Choose _Group 36 ( LMNA_&_C-alpha) has 119 elements_ (for clustering)
+   - [X] Choose _Group 35 (system-with-lmna) has 28578 elements_ (for output)
+      * R1
+      * R2: 7 clusters
+      * R3
+      * H1
+      * H2
+      * H3
+      * Q1
+      * Q2
+      * Q3
 
 ### Old Clustering
 
