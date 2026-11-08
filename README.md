@@ -250,9 +250,9 @@ It may be useful to prestage data first, then issue rsync. To prestage, use `ghi
 - [X] Cluster the extracted 2600 frames per 3x3 replicas **at cutoff 0.2 on C$\alpha$ of only lamin A**: `echo 36 35 | gmx cluster -f R1_final_centered-2600-frames.xtc -s raven_md_9J8M_R1.tpr -n ../expanded_9J8M_R_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-0.2-lamin/rmsd-raw.xpm -o cluster-0.2-lamin/rmsd-clust.xpm -g cluster-0.2-lamin/cluster.log -dist cluster-0.2-lamin/rmsd-dist.xvg -conv cluster-0.2-lamin/mc-conv.xvg -sz cluster-0.2-lamin/clustsize.xvg -tr cluster-0.2-lamin/clustertrans.xpm -ntr cluster-0.2-lamin/clustertrans.xvg -clid cluster-0.2-lamin/clusterid.xvg -cl cluster-0.2-lamin/clusters.pdb -clndx cluster-0.2-lamin/clindex.ndx`
    - [X] Choose _Group 36 ( LMNA_&_C-alpha) has 119 elements_ (for clustering)
    - [X] Choose _Group 35 (system-with-lmna) has 28578 elements_ (for output)
-      * R1
+      * R1 4 clusters
       * R2: 7 clusters
-      * R3
+      * R3: 1 cluster
       * H1: 6 clusters
       * H2: 17 clusters
       * H3: 2 clusters
