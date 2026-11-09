@@ -188,6 +188,8 @@ Reference: https://manual.gromacs.org/current/user-guide/terminology.html#sugges
   - _Note:_ Do **not** use `-pbc mol` or a _.tpr_ file because these will put the center of a molecule somewhere for centering, and will destroy all the "putting into the box and aligning" steps done before above.
   - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2, H3
   - WORKS :))
+- [X] Center full trajectory: `echo 35 35 | gmx trjconv -s Q1_cluster_frame0.pdb -f Q1_nojump-full.xtc -o Q1_final_centered-130000-frames.xtc -center -ur compact -n ../expanded_9J8M_Q_DNA-protein.ndx` (choose _35_)
+   - :) Done: R1, R2, R3, Q1, Q2, Q3, H1, H2, H3
   - [X] **Dump the first frame to make movies:** `echo 35 | gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_final_centered-2600-frames.xtc -o R1_first-frame.pdb -dump 0 -n ../expanded_9J8M_R_DNA-protein.ndx`
    - [X] Choose _35_ for output.
   - [X] **Dump the last frame:** `echo 35 | gmx trjconv -s raven_md_9J8M_R1.tpr -f R1_final_centered-2600-frames.xtc -o R1_final-frame.pdb -dump 150000000 -n ../expanded_9J8M_R_DNA-protein.ndx`
@@ -243,7 +245,7 @@ It may be useful to prestage data first, then issue rsync. To prestage, use `ghi
 
 ### Clustering for 2600 frames
 
-- [X] Cluster the _Analysis_ folder trajectories **at cutoff 0.4** for the C$\alpha$ and DNA backbone atoms: `echo 47 35 | gmx cluster -f H1_final_centered-2600-frames.xtc -s raven_md_9J8M_H1.tpr -n ../expanded_9J8M_H_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-0.2/rmsd-raw.xpm -o cluster-0.2/rmsd-clust.xpm -g cluster-0.2/cluster.log -dist cluster-0.2/rmsd-dist.xvg -conv cluster-0.2/mc-conv.xvg -sz cluster-0.2/clustsize.xvg -tr cluster-0.2/clustertrans.xpm -ntr cluster-0.2/clustertrans.xvg -clid cluster-0.2/clusterid.xvg -cl cluster-0.2/clusters.pdb -clndx cluster-0.2/clindex.ndx`
+- [X] Cluster the _Analysis_ folder trajectories **at cutoff 0.2** for the C$\alpha$ and DNA backbone atoms: `echo 47 35 | gmx cluster -f H1_final_centered-2600-frames.xtc -s raven_md_9J8M_H1.tpr -n ../expanded_9J8M_H_DNA-protein.ndx -b 0 -cutoff 0.2 -method gromos -om cluster-0.2/rmsd-raw.xpm -o cluster-0.2/rmsd-clust.xpm -g cluster-0.2/cluster.log -dist cluster-0.2/rmsd-dist.xvg -conv cluster-0.2/mc-conv.xvg -sz cluster-0.2/clustsize.xvg -tr cluster-0.2/clustertrans.xpm -ntr cluster-0.2/clustertrans.xvg -clid cluster-0.2/clusterid.xvg -cl cluster-0.2/clusters.pdb -clndx cluster-0.2/clindex.ndx`
    - [X] Choose _Group 47 (DNAC3+proteinCA) has  1415 elements_ (for clustering)
    - [X] Choose _Group 35 (system-with-lmna) has 28578 elements_ (for output)
    - [X] _Note:_ These produce too many clusters (in general: one majority difference, and one shoulder at 0.6).
