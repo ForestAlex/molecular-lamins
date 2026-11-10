@@ -35,6 +35,9 @@
  * Done for: R3, R2, R1, H1, H2, H3, Q1, Q2, Q3
 - [X] For LMNA: `echo 36|gmx rmsf -s "R1_cluster_frame0.pdb" -f "../../../ptmp_link/Analysis/9J8M_R1/R1_final_centered-130000-frames.xtc" -o "rmsf-lamin/rmsf_residue-R1-lamin.xvg" -n "../expanded-rmsd-R.ndx"`
  * Done for: Q3, Q2, Q1, H1, H2, H3, R3, R2, R1
+- [X] For HISTONES: `echo 49|gmx rmsf -s "Q3_cluster_frame0.pdb" -f "../../../ptmp_link/Analysis/9J8M_Q3/Q3_final_centered-130000-frames.xtc" -o "rmsf-histones/rmsf_residue-Q3-histones.xvg" -n "../expanded-rmsd-Q.ndx"`
+ * Done for: R1, R2, R3, H1, H2, H3, Q1, Q2, Q3
+
 
 
 
